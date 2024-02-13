@@ -41,6 +41,7 @@
     "@bytemd/plugin-gfm": "^1.21.0",
     "@bytemd/vue-next": "^1.21.0",
     "@ckeditor/ckeditor5-build-classic": "^41.1.0",
+    "@ckeditor/ckeditor5-build-inline": "^41.1.0",
     "@ckeditor/ckeditor5-vue": "^5.1.0",
     "@jackallabs/jackal.js": "^2.1.2",
     "vite-plugin-node-stdlib-browser": "^0.2.1",
