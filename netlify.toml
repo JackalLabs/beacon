@@ -1,0 +1,12 @@
+[[redirects]]
+    from = "/*"
+    to = "/index.html"
+    status = 200
+
+[[headers]]
+    for = "/*"
+    [headers.values]
+        Content-Security-Policy = "default-src 'self'; script-src 'self' chrome-extension: https://netlify-rum.netlify.app; connect-src https:; object-src blob:; media-src blob:; frame-src blob:; frame-ancestors 'self';"
+        X-Content-Type-Options = "nosniff"
+        Referrer-Policy = "same-origin"
+        Permissions-Policy = ""

@@ -1,0 +1,58 @@
+{
+  "name": "example",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "live:dev": "vite",
+    "live:custom": "vite --mode customnet",
+    "build:custom": "run-p type-check build-only-custom",
+    "build-only-custom": "vite build --mode customnet",
+    "live:testnet": "vite --mode testnet",
+    "build:testnet": "run-p type-check build-only-testnet",
+    "build-only-testnet": "vite build --mode testnet",
+    "live:prod": "vite --mode production",
+    "build:prod": "run-p type-check build-only",
+    "build-only": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
+  },
+  "contributors": [
+    {
+      "name": "Jackal Labs",
+      "email": "devadmin@jackallabs.io",
+      "url": "https://jackallabs.io"
+    },
+    {
+      "name": "Example",
+      "email": "example@jackallabs.io"
+    }
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JackalLabs/template_vue.git"
+  },
+  "bugs": {
+    "url": "https://github.com/JackalLabs/template_vue/issues"
+  },
+  "homepage": "https://github.com/JackalLabs/template_vue/#readme",
+  "dependencies": {
+    "vue": "^3.3.4",
+    "vue-router": "^4.1.6"
+  },
+  "devDependencies": {
+    "@btmills/prettier": "2.8.8",
+    "@rushstack/eslint-patch": "^1.1.4",
+    "@vitejs/plugin-vue": "^4.2.3",
+    "@vue/eslint-config-typescript": "^11.0.0",
+    "eslint": "^8.22.0",
+    "eslint-plugin-cypress": "^2.12.1",
+    "eslint-plugin-vue": "^9.3.0",
+    "sass": "^1.49.7",
+    "sass-loader": "^10.2.1",
+    "typescript": "^5.0.2",
+    "vite": "^4.4.5",
+    "vue-tsc": "^1.8.5"
+  }
+}
