@@ -3,6 +3,16 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 const routes: Array<RouteRecordRaw> = [
   {
+    path: '/editor',
+    name: 'Editor',
+    component: () => import('@/views/DraftEditor.vue')
+  },
+  {
+    path: '/settings',
+    name: 'Settings',
+    component: () => import('@/views/UserSettings.vue')
+  },
+  {
     path: '/:pathMatch(.*)*',
     name: 'Home',
     component: () => import('@/views/HomePage.vue')
