@@ -1,5 +1,5 @@
 {
-  "name": "example",
+  "name": "newsboy",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -24,20 +24,22 @@
       "url": "https://jackallabs.io"
     },
     {
-      "name": "Example",
-      "email": "example@jackallabs.io"
+      "name": "Erin Rivas",
+      "email": "erin@jackallabs.io"
     }
   ],
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/JackalLabs/template_vue.git"
+    "url": "git+https://github.com/JackalLabs/newsboy.git"
   },
   "bugs": {
-    "url": "https://github.com/JackalLabs/template_vue/issues"
+    "url": "https://github.com/JackalLabs/newsboy/issues"
   },
-  "homepage": "https://github.com/JackalLabs/template_vue/#readme",
+  "homepage": "https://github.com/JackalLabs/newsboy/#readme",
   "dependencies": {
+    "@jackallabs/jackal.js": "^2.1.2",
+    "bytemd": "^1.21.0",
     "vue": "^3.3.4",
     "vue-router": "^4.1.6"
   },
