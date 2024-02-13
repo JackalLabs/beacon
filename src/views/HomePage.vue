@@ -1,30 +1,56 @@
 <template>
-  <div>
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
+  <div class="template-container">
+    <div class="main-container">
+      <h1>Dashboard</h1>
+      <main>
+        <section>
+          <Editor :value="content" :plugins="plugins" @change="handleChange" />
+        </section>
+        <aside>
+<!--          // folders-->
+          <button type="button" @click="logContents">logContents</button>
+          <DraftDocuments />
+        </aside>
+      </main>
+    </div>
   </div>
-  <HelloWorld msg="Vite + Vue" />
 </template>
 
 <script setup lang="ts">
-import HelloWorld from '@/components/HelloWorld.vue'
+  import { ref } from 'vue'
+  import type { Ref } from 'vue'
+
+  import 'bytemd/dist/index.css'
+  import { Editor } from '@bytemd/vue-next'
+  import gfm from '@bytemd/plugin-gfm'
+
+  import DraftDocuments from '@/components/DraftDocuments.vue'
+
+  const plugins: any[] = [gfm()]
+  const content: Ref<string> = ref('')
+
+  const handleChange = (v: string) => {
+    content.value = v
+  }
+
+  const logContents = () => {
+    console.log(content.value)
+  }
+
 </script>
 
 <style lang="scss">
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
-}
+  main {
+    display: flex;
+    flex-flow: row;
+  }
+  aside {
+    width: 200px;
+  }
+
+  .bytemd {
+    //margin: 0.5em;
+    height: calc(100vh - 200px);
+    width: calc(100vw - 200px - 4rem);
+  }
 </style>

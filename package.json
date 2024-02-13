@@ -38,8 +38,9 @@
   },
   "homepage": "https://github.com/JackalLabs/newsboy/#readme",
   "dependencies": {
+    "@bytemd/plugin-gfm": "^1.21.0",
+    "@bytemd/vue-next": "^1.21.0",
     "@jackallabs/jackal.js": "^2.1.2",
-    "bytemd": "^1.21.0",
     "vue": "^3.3.4",
     "vue-router": "^4.1.6"
   },
