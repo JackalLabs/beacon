@@ -139,7 +139,12 @@ class BStore implements IBStore {
       throw 'oh fuck file io'
     }
     try {
-      await this.globalFileIo.verifyFoldersExist([workspace]);
+      const beacons = [
+        workspace,
+        `${workspace}/drafts`,
+        `${workspace}/published`
+      ]
+      await this.globalFileIo.verifyFoldersExist(beacons);
       await this.fetchDraftsFolder()
       await this.fetchPublishedFolder()
     } catch (err: any) {
