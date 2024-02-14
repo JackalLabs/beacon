@@ -1,6 +1,6 @@
 <template>
-  <div class="background-blocker" v-if="shouldName" @click.self="cancel">
-    <div id="name-modal" class="modal">
+  <div class="background-blocker" v-if="shouldDraftName || shouldPubName" @click.self="cancel">
+    <div id="name-modal" class="modal" v-if="shouldDraftName">
       <h2>Save Draft</h2>
       <div id="draft-name"><label>
         Draft Name:
@@ -11,11 +11,28 @@
         <button id="btn-cancel" @click="cancel">Cancel</button>
       </div>
     </div>
+    <div id="name-modal" class="modal" v-if="shouldPubName">
+      <h2>Publish Document</h2>
+      <div id="draft-name"><label>
+        Published Name:
+        <input type="text" required v-model="saveDraftFileName"/>
+      </label></div>
+      <div id="draft-buttons">
+        <button id="btn-save" @click="publishFile">Save</button>
+        <button id="btn-cancel" @click="cancel">Cancel</button>
+      </div>
+    </div>
+  </div>
+  <div id="loading" v-if="loading">
+    Loading...
   </div>
 
 <div class="draft-docs">
   <h2>Drafts</h2>
-  <h3 class="add-button" @click="openSaveDraft">+</h3>
+  <div class="action-buttons">
+    <h3 class="add-button" @click="openSaveDraft">+</h3>
+    <h3 class="public-button" @click="openPubDraft">P</h3>
+  </div>
   <ul class="files">
     <li v-for="item in files">
       <div class="file-card" @click="loadFile(item)">
@@ -31,26 +48,30 @@
 
   import { ref, onMounted, Ref } from 'vue'
   import { FolderHandler } from '@jackallabs/jackal.js'
-  const shouldName = ref(false)
+  const shouldDraftName = ref(false)
+  const shouldPubName = ref(false)
+
+  const loading = ref(false)
   const saveDraftFileName = ref("")
 
-  const props = defineProps(['content'])
+  const props = defineProps(['content', 'setter'])
 
   const files:Ref<string[]> = ref([])
 
   function cancel() {
-    shouldName.value = false;
+    shouldDraftName.value = false;
+    shouldPubName.value = false;
   }
 
   function openSaveDraft() {
-    shouldName.value = true;
+    shouldDraftName.value = true;
+  }
+  function openPubDraft() {
+    shouldPubName.value = true;
   }
 
   function refreshDrafts() {
     bStore.getDraftsFolder().then((folder:FolderHandler) => {
-
-      console.dir(folder)
-
       const children = folder.getChildFiles()
       files.value = Object.keys(children)
     }).catch((e) => {
@@ -63,18 +84,26 @@
   })
 
   async function saveDraft() {
-    console.log("saving!")
-    console.log(props.content)
-
+    loading.value = true
     await bStore.saveDraft(saveDraftFileName.value, props.content).catch(alert)
-
     cancel()
     refreshDrafts()
+    loading.value = false
   }
 
-  function loadFile(filename:string) {
-    console.log(filename)
+  async function publishFile() {
+    loading.value = true
+    await bStore.publishFinal(saveDraftFileName.value, props.content).catch(alert)
+    cancel()
+    refreshDrafts()
+    loading.value = false
+  }
 
+  async function loadFile(filename:string) {
+    loading.value = true
+    const s = await bStore.loadDraft(filename).catch(alert)
+    props.setter(s)
+    loading.value = false
   }
 
 
@@ -132,17 +161,28 @@
     border-left: none;
   }
 
-  .add-button {
-    text-align: center;
-    width: 100%;
-    padding: 4px 0px 4px 0px;
-    cursor: pointer;
 
-    border-bottom: #888888 solid;
+  .action-buttons > *:hover {
+    text-decoration: underline;
   }
 
-  .add-button:hover {
-    text-decoration: underline;
+  .action-buttons > * {
+    padding: 0px 16px;
+    background-color: #ddd;
+    border-radius: 4px;
+    text-align: center;
+    cursor: pointer;
+  }
+
+  .action-buttons {
+    width: 100%;
+    padding: 4px 0px 4px 0px;
+    border-bottom: #888888 solid;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+
   }
 
   .background-blocker {
@@ -152,6 +192,7 @@
     width: 100vw;
     height: 100vh;
     background-color: rgba(255, 255, 255, 0.5);
+    z-index: 100;
   }
 
   .modal {
@@ -187,6 +228,13 @@
 
   #draft-name {
     margin-top: 10px;
+  }
+
+  #loading {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    font-size: 2rem;
   }
 
 </style>

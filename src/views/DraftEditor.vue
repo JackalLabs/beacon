@@ -15,7 +15,7 @@
           <CKE id="editor" :editor="CustomCKEditor" v-model="editorData" :config="{}" />
         </section>
         <aside>
-          <DraftDocuments :content="editorData"/>
+          <DraftDocuments :content="editorData" :setter="setEditorText"/>
         </aside>
       </main>
       <main v-else>
@@ -41,6 +41,10 @@
   const editorData = ref('')
 
   const walletInit = ref(false)
+
+  const setEditorText = function(s:string) {
+    editorData.value = s
+  }
 
   async function connectWallet() {
     await bStore.initWallet("keplr").catch(alert)
