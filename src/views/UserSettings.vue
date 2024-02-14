@@ -3,8 +3,11 @@
     <div class="main-container">
       <h1>Dashboard</h1>
       <main>
-        <section>
+        <section v-if="myRns">
           <h2>Display RNS</h2>
+          <select>
+            <option v-for="item in Object.keys(myRns)" :key="item">{{ item }}</option>
+          </select>
         </section>
         <section>
           <h2>Publish Format</h2>
@@ -15,22 +18,12 @@
 </template>
 
 <script setup lang="ts">
+import { bStore } from '@/store/main.ts'
 
+const myRns = bStore.getOwnedRns()
 
 </script>
 
 <style lang="scss">
-  main {
-    display: flex;
-    flex-flow: row;
-  }
-  aside {
-    width: 200px;
-  }
 
-  .bytemd {
-    //margin: 0.5em;
-    height: calc(100vh - 200px);
-    width: calc(100vw - 200px - 4rem);
-  }
 </style>
