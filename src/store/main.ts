@@ -79,21 +79,21 @@ class BStore implements IBStore {
     return this.jackalAddress
   }
 
-  async getWorkspaceFolder(): FolderHandler {
+  getWorkspaceFolder(): FolderHandler {
     if (!this.workspaceFolder) {
       throw Error('no workspace')
     }
     return this.workspaceFolder
   }
 
-  async getDraftsFolder(): FolderHandler {
+  getDraftsFolder(): FolderHandler {
     if (!this.draftsFolder) {
       throw Error('no drafts')
     }
     return this.draftsFolder
   }
 
-  async getPublishedFolder(): FolderHandler {
+  getPublishedFolder(): FolderHandler {
     if (!this.publishedFolder) {
       throw Error('no published')
     }
@@ -158,7 +158,7 @@ class BStore implements IBStore {
   }
 
   async compilePublications(): Promise<void> {
-    if (!this.globalFileIo || !this.publishedFolder) {
+    if (!this.globalFileIo || !this.publishedFolder || !this.workspaceFolder) {
       throw 'oh fuck file io'
     }
 

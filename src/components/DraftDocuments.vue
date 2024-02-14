@@ -71,12 +71,8 @@
   }
 
   function refreshDrafts() {
-    bStore.getDraftsFolder().then((folder:FolderHandler) => {
-      const children = folder.getChildFiles()
-      files.value = Object.keys(children)
-    }).catch((e) => {
-      alert(e)
-    })
+    const folder = bStore.getDraftsFolder()
+    files.value = Object.keys(folder.getChildFiles())
   }
 
   onMounted(() => {
