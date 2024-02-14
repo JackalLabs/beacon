@@ -123,7 +123,7 @@ class BStore implements IBStore {
 
     await this.globalFileIo.shuffle()
     const publishFile = new File([source], safeName)
-    const handler = await FileUploadHandler.trackFile(publishFile, this.draftsFolder.getMyPath())
+    const handler = await FileUploadHandler.trackFile(publishFile, this.publishedFolder.getMyPath())
     const upload: IUploadList = {}
     upload[safeName] = {
       data: null,
@@ -132,8 +132,8 @@ class BStore implements IBStore {
       key: safeName,
       uploadable: await handler.getForPublicUpload()
     }
-    await this.globalFileIo.staggeredUploadFiles(upload, this.draftsFolder, { complete: 0, timer: 0 })
-    await this.fetchDraftsFolder()
+    await this.globalFileIo.staggeredUploadFiles(upload, this.publishedFolder, { complete: 0, timer: 0 })
+    await this.fetchPublishedFolder()
   }
 
   private async fetchDraftsFolder(): Promise<void> {

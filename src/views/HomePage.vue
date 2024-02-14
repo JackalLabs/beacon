@@ -34,7 +34,7 @@
 
   onMounted(async () => {
     if (shell.value && route.params.user?.length && route.params.slug?.length) {
-      shell.value.innerHTML = await requestData(route.params.user[0], route.params.slug[0])
+      shell.value.innerHTML = await requestData(route.params.user[0], route.params.slug[0]) || ''
     }
   })
 
