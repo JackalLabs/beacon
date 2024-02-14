@@ -1,7 +1,10 @@
 <template>
   <div class="template-container">
     <div class="connect-buttons">
-      <button @click="connectWallet" :disabled="walletInit">{{ walletInit ? "Connected" : "Connect Wallet" }}</button>
+      <button @click="connectWallet"  v-if=!walletInit>Connect Wallet</button>
+      <router-link v-else :to="`/` + address">
+        <button >My Profile</button>
+      </router-link>
       <a href="https://app.osmosis.zone/?to=JKL&from=OSMO" target="_blank">
         <button>Get Jackal</button>
       </a>
@@ -39,9 +42,9 @@
 
   const CKE = CKEditor.component
   const editorData = ref('')
+  const address = ref(bStore.getJackalAddress())
 
   const walletInit = ref(bStore.isWalletInit())
-
   const setEditorText = function(s:string) {
     editorData.value = s
   }
@@ -49,11 +52,13 @@
   async function connectWallet() {
     if (bStore.isWalletInit()) {
       walletInit.value = bStore.isWalletInit()
+      address.value = bStore.getJackalAddress()
       return
     }
 
     await bStore.initWallet("keplr").catch(alert)
     walletInit.value = bStore.isWalletInit()
+    address.value = bStore.getJackalAddress()
   }
 
 </script>
