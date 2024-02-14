@@ -57,7 +57,6 @@
   aside {
     width: 200px;
     min-height: 200px;
-    background-color: blue;
   }
 
   .bytemd {
@@ -73,6 +72,7 @@
     min-height: 65vh;
     max-height: 500px;
     overflow-y: scroll;
+    box-sizing: border-box;
   }
 
   #editor {
