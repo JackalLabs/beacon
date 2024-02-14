@@ -1,7 +1,7 @@
 <template>
   <div class="template-container">
-    <div>
-      <button @click="connectWallet">Connect Wallet</button>
+    <div class="connect-buttons">
+      <button @click="connectWallet" :disabled="walletInit">{{ walletInit ? "Connected" : "Connect Wallet" }}</button>
       <button>Get Jackal</button>
     </div>
     <div class="main-container" v-if="walletInit">
@@ -87,6 +87,14 @@
   #editor {
     border-style: solid;
     border-color: gray;
+  }
+
+  .connect-buttons {
+    display: flex;
+    gap: 20px;
+    flex-direction: row;
+    justify-content: flex-end;
+    margin: 10px 10px 0px 0px;
   }
 
 </style>
