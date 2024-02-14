@@ -8,12 +8,10 @@
       <h1>Dashboard</h1>
       <main>
         <section>
-<!--          <Editor :value="content" :plugins="plugins" @change="handleChange" />-->
-          <cke id="editor" :editor="InlineEditor" v-model="editorData" :config="editorConfig" />
+          <CKE id="editor" :editor="CustomCKEditor" v-model="editorData" :config="{}" />
         </section>
         <aside>
 <!--          // folders-->
-<!--          <button type="button" @click="logContents">logContents</button>-->
           <DraftDocuments />
         </aside>
       </main>
@@ -22,33 +20,12 @@
 </template>
 
 <script setup lang="ts">
-  // import { computed, ref } from 'vue'
-  // import type { Ref } from 'vue'
-
-  import InlineEditor from '@ckeditor/ckeditor5-build-inline'
+  import CustomCKEditor from '@jackallabs/ck5-custom'
   import CKEditor from '@ckeditor/ckeditor5-vue'
-
-  const cke = CKEditor.component
-  const editorData = '<p>Content of the editor.</p>'
-  const editorConfig = {
-    // The configuration of the editor.
-  }
-  // <ckeditor :editor="editor" v-model="editorData" :config="editorConfig"></ckeditor>
-
   import DraftDocuments from '@/components/DraftDocuments.vue'
-  // import { bStore } from '@/store/main.ts'
 
-  // const content: Ref<string> = ref('')
-
-  // const rdy = computed(() => bStore.isFileIoInit())
-
-  // const handleChange = (v: string) => {
-  //   content.value = v
-  // }
-
-  // const logContents = () => {
-  //   console.log(content.value)
-  // }
+  const CKE = CKEditor.component
+  const editorData = '<p>Content of the editor.</p>'
 
 </script>
 
