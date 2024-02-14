@@ -111,6 +111,7 @@
   }
 
   .work-item {
+    width: 100%;
   }
 
   .work-body {
