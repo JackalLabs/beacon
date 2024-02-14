@@ -1,23 +1,36 @@
 <template>
+  <div class="background-blocker" v-if="shouldName" @click.self="cancel">
+    <div id="name-modal" class="modal">
+      <h2>Save Draft</h2>
+      <div id="draft-name"><label>
+        Draft Name:
+        <input type="text" required />
+      </label></div>
+      <div id="draft-buttons">
+        <button id="btn-save" @click="saveDraft">Save</button>
+        <button id="btn-cancel" @click="cancel">Cancel</button>
+      </div>
+    </div>
+  </div>
+
 <div class="draft-docs">
   <h2>Drafts</h2>
-  <h3 class="add-button">+</h3>
+  <h3 class="add-button" @click="openSaveDraft">+</h3>
   <ul class="files">
     <li v-for="item in files">
-      <div class="file-card">
+      <div class="file-card" @click="loadFile(item.name)">
         <h3>{{ item.name }}</h3>
-        <span>{{ item.name }}</span>
       </div>
     </li>
-
-
   </ul>
 </div>
 </template>
 
 <script setup lang="ts">
+  import { ref } from 'vue'
+  const shouldName = ref(false)
 
-  const files = [
+  const files = ref([
     {name: "test1"},
     {name: "test2"},
     {name: "test3"},
@@ -33,11 +46,33 @@
     {name: "test3"},
     {name: "test4"},
     {name: "test5"}
-  ]
+  ])
+
+
+  function cancel() {
+    shouldName.value = false;
+  }
+
+  function openSaveDraft() {
+    shouldName.value = true;
+  }
+
+
+  function saveDraft() {
+    console.log("saving!")
+    cancel()
+  }
+
+  function loadFile(filename:string) {
+    console.log(filename)
+  }
+
+
 
 </script>
 
 <style lang="scss">
+
 
   ul {
     list-style: none;
@@ -79,9 +114,7 @@
     min-height: 65vh;
     display: flex;
     flex-direction: column;
-
     padding-top: 8px;
-
     border-style: solid;
     border-width: 1px;
     border-color: #888888;
@@ -100,6 +133,50 @@
 
   .add-button:hover {
     text-decoration: underline;
+  }
+
+  .background-blocker {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(255, 255, 255, 0.5);
+  }
+
+  .modal {
+    background-color: #eeeeee;
+    width: 40vw;
+    max-width: 432px;
+    height: 20vh;
+    position: absolute;
+    top: 50vh;
+    left: 50vw;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    border-radius: 8px;
+    border-style: solid;
+    border-color: #888888;
+    border-width: 6px;
+  }
+
+  button {
+    background-color: lightblue;
+  }
+
+  #draft-buttons {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    column-gap: 10px;
+  }
+
+  #draft-name {
+    margin-top: 10px;
   }
 
 </style>
