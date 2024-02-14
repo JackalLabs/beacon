@@ -9,8 +9,8 @@ import type {
 import { FileUploadHandler, FolderHandler, WalletHandler } from '@jackallabs/jackal.js'
 import { mainnetConfig } from '@/config/mainnet.ts'
 
-const workspace = 'Newsboy'
-const publish = 'radiant'
+const workspace = 'newsboy'
+const publish = 'publish' // TODO
 
 interface IBStore {
   initWallet(selectedWallet: string): Promise<void>
@@ -18,6 +18,8 @@ interface IBStore {
   getOwnedRns(): IRnsOwnedHashMap | null
   getJackalAddress(): string
   getDraftsFolder(): FolderHandler
+
+  saveDraft(name: string, source: string): Promise<void>
 
   isWalletInit(): boolean
   isFileIoInit(): boolean
@@ -85,14 +87,13 @@ class BStore implements IBStore {
 
     const tmpFile = new File([source], name)
     const handler = await FileUploadHandler.trackFile(tmpFile, this.draftsFolder.getMyPath())
-    const upload: IUploadList = {
-      name: {
-        data: null,
-        exists: false,
-        handler,
-        key: name,
-        uploadable: handler.getForUpload()
-      }
+    const upload: IUploadList = {}
+    upload[name] = {
+      data: null,
+      exists: false,
+      handler,
+      key: name,
+      uploadable: await handler.getForUpload()
     }
     await this.globalFileIo.staggeredUploadFiles(upload, this.draftsFolder, { complete: 0, timer: 0 })
     await this.fetchDraftsFolder()
@@ -107,7 +108,7 @@ class BStore implements IBStore {
 
 
 
-  async fetchDraftsFolder(): Promise<void> {
+  private async fetchDraftsFolder(): Promise<void> {
     this.draftsFolder = await this.globalFileIo.downloadFolder(['s', workspace, 'drafts'].join('/'))
   }
 
