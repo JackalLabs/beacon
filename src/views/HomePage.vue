@@ -90,10 +90,14 @@
     background: lightcoral;
   }
 
+  button {
+    background-color: lightblue;
+  }
+
 
   .hero {
     height: 80vh;
-    background-color: lightgray;
+    //background-color: lightgray;
     padding-top: 10vh;
 
     width: 70vw;

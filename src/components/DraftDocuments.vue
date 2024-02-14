@@ -30,8 +30,8 @@
 <div class="draft-docs">
   <h2>Drafts</h2>
   <div class="action-buttons">
-    <h3 class="add-button" @click="openSaveDraft">+</h3>
-    <h3 class="public-button" @click="openPubDraft">P</h3>
+    <button class="add-button" @click="openSaveDraft">+</button>
+    <button class="public-button" @click="openPubDraft">P</button>
   </div>
   <ul class="files">
     <li v-for="item in files">
@@ -125,16 +125,24 @@
   }
 
   .file-card {
-    background-color: #ddd;
-    border-radius: 4px;
+    border-radius: 4px 4px 0px 4px;
     align-items: flex-start;
     flex-direction: column;
     display: flex;
     padding: 4px 10px 4px 10px;
     cursor: pointer;
+    border-left: lightcoral solid 4px;
+    border-bottom: black solid 1px;
+    box-sizing: border-box;
   }
-  .file-card:hover > * {
-    text-decoration: underline;
+
+  button {
+    background-color: lightblue;
+  }
+
+  .file-card:hover {
+    background-color: #f0f0f0;
+    border-bottom: black solid 3px;
   }
 
   .files {
@@ -157,16 +165,7 @@
     border-left: none;
   }
 
-
-  .action-buttons > *:hover {
-    text-decoration: underline;
-  }
-
   .action-buttons > * {
-    padding: 0px 16px;
-    background-color: #ddd;
-    border-radius: 4px;
-    text-align: center;
     cursor: pointer;
   }
 
@@ -177,7 +176,8 @@
 
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
+    justify-content: center;
+    gap: 10px;
 
   }
 
@@ -210,9 +210,7 @@
     border-width: 6px;
   }
 
-  button {
-    background-color: lightblue;
-  }
+
 
   #draft-buttons {
     margin-top: 30px;

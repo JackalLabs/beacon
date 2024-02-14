@@ -3,8 +3,20 @@
     <div class="main-container">
       <main>
         <section>
-          <div ref="shell" >
-            <span class="loader"></span>
+          <div>
+            <span v-if="!worx.length" class="loader"></span>
+            <div v-else>
+              <h1>{{ address }}'s Worx</h1>
+              <ul class="work-list">
+                <li class="work-item" v-for="item in worx">
+                  <router-link :to="`/` + address + `/` + item">
+                    <div class="work-body">
+                      <h2>{{ item }}</h2>
+                    </div>
+                  </router-link>
+                </li>
+              </ul>
+            </div>
           </div>
         </section>
         <aside>
@@ -17,26 +29,39 @@
 </template>
 
 <script setup lang="ts">
-  import { onMounted, ref } from 'vue'
+  import { onMounted, Ref, ref } from 'vue'
   import { useRoute } from 'vue-router'
+  import { bStore } from '@/store/main.ts'
 
-  const shell = ref<HTMLElement | null>(null)
   const peoples = ref<HTMLElement | null>(null)
   const route = useRoute()
 
-  async function requestData(owner: string): Promise<string> {
+  const worx:Ref<string[]> = ref([])
+
+  const address = route.params.user
+
+  async function requestData(owner: string): Promise<any> {
     const url = `https://jackal.link/p/${owner}/beacon/worx`
     return fetch(url)
-      .then(resp => resp.text())
+      .then(resp => resp.json())
       .catch(err => {
         throw err
       })
   }
 
+  async function updateWorx(owner: string) {
+    console.log(owner)
+    const data = await requestData(owner).catch(alert)
+    console.log(data)
+    for (const k in data) {
+      worx.value.unshift(k)
+    }
+  }
+
   onMounted(async () => {
     console.log(route.params)
-    if (shell.value && route.params.user?.length) {
-      shell.value.innerHTML = await requestData(route.params.user as string) || ''
+    if (route.params.user?.length) {
+      await updateWorx(route.params.user as string)
     }
   })
 
@@ -75,6 +100,36 @@
   }
 
 
+  .work-list {
+    list-style: none;
+    padding-left: 0px;
+    margin: 0px;
+    display: flex;
+    flex-direction: column;
+    max-width: 30vw;
+    margin: 0px auto;
+  }
+
+  .work-item {
+  }
+
+  .work-body {
+    min-height: 200px;
+    color: black;
+
+    margin-top: 20px;
+
+    border-left: lightcoral solid 8px;
+    border-bottom: black solid 4px;
+    border-top: black solid 1px;
+    border-right: black solid 1px;
+
+  }
+
+  .work-body:hover {
+    background-color: #f0f0f0;
+    border-bottom: black solid 8px;
+  }
 
 
 
