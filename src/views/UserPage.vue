@@ -1,8 +1,8 @@
 <template>
   <div class="template-container">
     <div class="main-container">
-      <main>
-        <section>
+      <main id="user-main">
+<!--        <section>-->
           <div>
             <span v-if="!worx.length" class="loader"></span>
             <div v-else>
@@ -18,11 +18,6 @@
               </ul>
             </div>
           </div>
-        </section>
-        <aside>
-<!--          // people here -->
-          <div ref="peoples" />
-        </aside>
       </main>
     </div>
   </div>
@@ -68,11 +63,11 @@
 </script>
 
 <style lang="scss">
-  main {
-    display: grid;
-    grid-template-columns: auto 300px;
-    grid-template-rows: 1fr;
+  #user-main {
     padding: 0rem 4rem;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
   }
   .loader {
     width: 48px;
@@ -108,6 +103,7 @@
     flex-direction: column;
     max-width: 30vw;
     margin: 0px auto;
+    padding-bottom: 40px;
   }
 
   .work-item {
@@ -124,7 +120,9 @@
     border-bottom: black solid 4px;
     border-top: black solid 1px;
     border-right: black solid 1px;
-
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .work-body:hover {

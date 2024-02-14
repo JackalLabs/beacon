@@ -30,8 +30,8 @@
 <div class="draft-docs">
   <h2>Drafts</h2>
   <div class="action-buttons">
-    <button class="add-button" @click="openSaveDraft">+</button>
-    <button class="public-button" @click="openPubDraft">P</button>
+    <button class="add-button" @click="openSaveDraft">Save</button>
+    <button class="public-button" @click="openPubDraft">Pub.</button>
   </div>
   <ul class="files">
     <li v-for="item in files">

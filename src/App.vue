@@ -1,5 +1,6 @@
 <template>
   <NavBar />
+   <span id="jackal-logo">Made by Jackal Labs</span>
   <router-view />
 </template>
 
@@ -17,5 +18,15 @@
 
 <style lang="scss">
 @import '@/assets/css/style.css';
+@import '@/assets/css/ck.css';
+
+
+#jackal-logo {
+  text-align: left;
+  position: fixed;
+  left: 12px;
+  bottom: 4px;
+}
+
 
 </style>

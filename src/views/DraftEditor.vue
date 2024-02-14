@@ -1,5 +1,5 @@
 <template>
-  <div class="template-container">
+  <div id="editor-temp" class="template-container">
     <div class="connect-buttons">
       <button @click="connectWallet"  v-if=!walletInit>Connect Wallet</button>
       <router-link v-else :to="`/` + address">
@@ -13,9 +13,9 @@
     </div>
     <div class="main-container" >
       <h1>Beacon Editor</h1>
-      <main v-if="walletInit">
+      <main id="editor-main" v-if="walletInit">
         <section>
-          <CKE id="editor" :editor="CustomCKEditor" v-model="editorData" :config="{}" />
+          <CKE id="editor" :editor="CustomCKEditor" v-model="editorData" :config="{mediaEmbed: {previewsInData: true}}" />
         </section>
         <aside>
           <DraftDocuments :content="editorData" :setter="setEditorText"/>
@@ -64,14 +64,14 @@
 </script>
 
 <style lang="scss">
-  main {
+  #editor-main {
     display: grid;
     grid-template-columns: auto 200px;
     grid-template-rows: 1fr;
     padding: 0rem 4rem;
   }
 
-  .template-container {
+  #editor-temp {
     display: flex;
     flex-direction: column;
     //height: 100%;
