@@ -1,5 +1,5 @@
 {
-  "name": "newsboy",
+  "name": "beacon",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -35,12 +35,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/JackalLabs/newsboy.git"
+    "url": "git+https://github.com/JackalLabs/beacon.git"
   },
   "bugs": {
-    "url": "https://github.com/JackalLabs/newsboy/issues"
+    "url": "https://github.com/JackalLabs/beacon/issues"
   },
-  "homepage": "https://github.com/JackalLabs/newsboy/#readme",
+  "homepage": "https://github.com/JackalLabs/beacon/#readme",
   "dependencies": {
     "@ckeditor/ckeditor5-vue": "^5.1.0",
     "@jackallabs/ck5-custom": "file:jackallabs-ck5-custom-0.0.0.tgz",
