@@ -130,7 +130,7 @@ class BStore implements IBStore {
       exists: false,
       handler,
       key: safeName,
-      uploadable: await handler.getForUpload()
+      uploadable: await handler.getForPublicUpload()
     }
     await this.globalFileIo.staggeredUploadFiles(upload, this.draftsFolder, { complete: 0, timer: 0 })
     await this.fetchDraftsFolder()
