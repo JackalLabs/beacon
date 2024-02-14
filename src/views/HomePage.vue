@@ -11,16 +11,16 @@
         </div>
           <div id="hero-art"></div>
       </div>
-      <main v-else>
-        <section>
-          <div ref="shell" >
+      <main v-else id="home-main">
+        <section id="article-section">
+          <div id="article" ref="shell" >
             <span class="loader"></span>
           </div>
         </section>
-        <aside>
-<!--          // people here -->
-          <div ref="peoples" />
-        </aside>
+<!--        <aside>-->
+<!--&lt;!&ndash;          // people here &ndash;&gt;-->
+<!--          <div ref="peoples" />-->
+<!--        </aside>-->
       </main>
     </div>
   </div>
@@ -53,11 +53,18 @@
 </script>
 
 <style lang="scss">
-  main {
-    display: grid;
-    grid-template-columns: auto 300px;
-    grid-template-rows: 1fr;
+  #home-main {
     padding: 0rem 4rem;
+    height: 100%;
+  }
+  .main-container {
+    height: 100%;
+    flex-grow: 1;
+    margin-top: 0px;
+  }
+  .template-container {
+    flex-grow: 1;
+    background-color: #fafafa;
   }
   .loader {
     width: 48px;
@@ -92,6 +99,30 @@
 
   button {
     background-color: lightblue;
+  }
+
+  #article-section {
+    width: 50%;
+    margin: 0px auto;
+    border-left: gray solid 1px;
+    border-right: gray solid 1px;
+    padding: 0px 60px;
+    height: 100%;
+    background-color: #fff;
+  }
+
+  #article {
+    text-align: left;
+    padding-top: 40px;
+
+    img {
+      width: 100% !important;
+      height: auto !important;
+    }
+
+    h1 {
+      margin-top: 0px;
+    }
   }
 
 
