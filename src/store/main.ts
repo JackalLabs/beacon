@@ -63,6 +63,9 @@ class BStore implements IBStore {
       this.globalRns = await this.globalWallet.makeRnsHandler()
       this.loadAvailableRns()
     }
+    this.globalFileIo.checkFolderIsFileTree(['s', workspace].join('/'))
+    this.globalFileIo.checkFolderIsFileTree(['s', workspace, 'drafts'].join('/'))
+    this.globalFileIo.checkFolderIsFileTree(['s', workspace, 'published'].join('/'))
     await this.prepWorkspace()
   }
 

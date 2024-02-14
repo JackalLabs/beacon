@@ -1,6 +1,7 @@
 <template>
   <nav>
     <ul>
+
       <li v-for="(item, index) in navItems" :key="index">
         <router-link :to="item.path">
           <span class="text">{{ item.label }}</span>
@@ -26,6 +27,7 @@ import { navItems } from '@/config/nav.ts'
   li {
     float: left;
   }
+
 
   li a {
     display: block;

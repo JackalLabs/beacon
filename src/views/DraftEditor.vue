@@ -2,17 +2,28 @@
   <div class="template-container">
     <div class="connect-buttons">
       <button @click="connectWallet" :disabled="walletInit">{{ walletInit ? "Connected" : "Connect Wallet" }}</button>
-      <button>Get Jackal</button>
+      <a href="https://app.osmosis.zone/?to=JKL&from=OSMO" target="_blank">
+        <button>Get Jackal</button>
+      </a>
+
+
     </div>
-    <div class="main-container" v-if="walletInit">
-      <h1>Dashboard</h1>
-      <main>
+    <div class="main-container" >
+      <h1>Beacon Editor</h1>
+      <main v-if="walletInit">
         <section>
           <CKE id="editor" :editor="CustomCKEditor" v-model="editorData" :config="{}" />
         </section>
         <aside>
-<!--          // folders-->
           <DraftDocuments :content="editorData"/>
+        </aside>
+      </main>
+      <main v-else>
+        <section>
+          <div class="editor-placeholder"></div>
+        </section>
+        <aside>
+          <div class="folder-placeholder"></div>
         </aside>
       </main>
     </div>
@@ -27,7 +38,7 @@
   import { ref } from 'vue'
 
   const CKE = CKEditor.component
-  const editorData = ref('<p>Content of the editor.</p>')
+  const editorData = ref('')
 
   const walletInit = ref(false)
 
@@ -77,7 +88,7 @@
   .ck-powered-by, .ck-powered-by-balloon {
     display: none !important;
   }
-  .ck-editor__editable {
+  .ck-editor__editable, .editor-placeholder {
     min-height: 65vh;
     max-height: 500px;
     overflow-y: scroll;
@@ -91,10 +102,25 @@
 
   .connect-buttons {
     display: flex;
-    gap: 20px;
+    gap: 10px;
     flex-direction: row;
     justify-content: flex-end;
     margin: 10px 10px 0px 0px;
+  }
+
+
+  .editor-placeholder {
+    border-radius: 8px;
+    filter: blur(8px);
+    background-color: #dddddd;
+  }
+
+  .folder-placeholder {
+   border-radius: 8px;
+    filter: blur(8px);
+    width: 100%;
+    height: 100%;
+    background-color: #dddddd
   }
 
 </style>
