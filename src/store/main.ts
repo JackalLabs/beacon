@@ -8,9 +8,9 @@ import type {
 } from '@jackallabs/jackal.js'
 import { FileUploadHandler, FolderHandler, WalletHandler } from '@jackallabs/jackal.js'
 import { mainnetConfig } from '@/config/mainnet.ts'
+import { sanitizeName } from '@/utils/conversion.ts'
 
-const workspace = 'newsboy'
-const publish = 'publish' // TODO
+const workspace = 'beacon'
 
 interface IBStore {
   initWallet(selectedWallet: string): Promise<void>
@@ -20,6 +20,7 @@ interface IBStore {
   getDraftsFolder(): FolderHandler
 
   saveDraft(name: string, source: string): Promise<void>
+  publishFinal(name: string, source: string): Promise<void>
 
   isWalletInit(): boolean
   isFileIoInit(): boolean
@@ -34,12 +35,17 @@ class BStore implements IBStore {
   private ownedRns: IRnsOwnedHashMap | null
 
   private draftsFolder: IFolderHandler | null
+  private publishedFolder: IFolderHandler | null
 
   constructor() {
     this.globalWallet = null
     this.globalFileIo = null
     this.globalRns = null
     this.jackalAddress = ''
+
+    this.ownedRns = null
+    this.draftsFolder = null
+    this.publishedFolder = null
   }
 
   async initWallet(selectedWallet: string = 'leap'): Promise<void> {
@@ -73,11 +79,6 @@ class BStore implements IBStore {
     return this.draftsFolder
   }
 
-
-
-
-
-
   async saveDraft(name: string, source: string): Promise<void> {
     if (!this.globalFileIo || !this.draftsFolder) {
       throw 'oh fuck file io'
@@ -97,17 +98,31 @@ class BStore implements IBStore {
     await this.fetchDraftsFolder()
   }
 
-
-
-
-
-
-
-
-
+  async publishFinal(name: string, source: string): Promise<void> {
+    if (!this.globalFileIo || !this.publishedFolder) {
+      throw 'oh fuck file io'
+    }
+    const safeName = `${sanitizeName(name)}.html`
+    const publishFile = new File([source], safeName)
+    const handler = await FileUploadHandler.trackFile(publishFile, this.draftsFolder.getMyPath())
+    const upload: IUploadList = {}
+    upload[safeName] = {
+      data: null,
+      exists: false,
+      handler,
+      key: safeName,
+      uploadable: await handler.getForUpload()
+    }
+    await this.globalFileIo.staggeredUploadFiles(upload, this.draftsFolder, { complete: 0, timer: 0 })
+    await this.fetchDraftsFolder()
+  }
 
   private async fetchDraftsFolder(): Promise<void> {
     this.draftsFolder = await this.globalFileIo.downloadFolder(['s', workspace, 'drafts'].join('/'))
+  }
+
+  private async fetchPublishedFolder(): Promise<void> {
+    this.publishedFolder = await this.globalFileIo.downloadFolder(['s', workspace, 'published'].join('/'))
   }
 
   private async loadAvailableRns() {
@@ -117,15 +132,14 @@ class BStore implements IBStore {
     this.ownedRns = await this.globalRns.findMyExistingNames()
   }
 
-  private async prepWorkspace() {
+  private async prepWorkspace(): Promise<void> {
     if (!this.globalFileIo) {
       throw 'oh fuck file io'
     }
     try {
-
-      await this.globalFileIo.verifyFoldersExist([workspace, publish]);
-
+      await this.globalFileIo.verifyFoldersExist([workspace]);
       await this.fetchDraftsFolder()
+      await this.fetchPublishedFolder()
     } catch (err: any) {
       console.log(err);
       console.log("AHHHHH");
