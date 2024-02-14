@@ -99,6 +99,7 @@ class BStore implements IBStore {
     if (!this.globalFileIo || !this.draftsFolder) {
       throw 'oh fuck file io'
     }
+    await this.globalFileIo.shuffle()
 
     const tmpFile = new File([source], name)
     const handler = await FileUploadHandler.trackFile(tmpFile, this.draftsFolder.getMyPath())
@@ -119,6 +120,8 @@ class BStore implements IBStore {
       throw 'oh fuck file io'
     }
     const safeName = `${sanitizeName(name)}.html`
+
+    await this.globalFileIo.shuffle()
     const publishFile = new File([source], safeName)
     const handler = await FileUploadHandler.trackFile(publishFile, this.draftsFolder.getMyPath())
     const upload: IUploadList = {}
