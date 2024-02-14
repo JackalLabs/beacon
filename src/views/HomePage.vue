@@ -17,6 +17,9 @@
             <span class="loader"></span>
           </div>
         </section>
+        <section id="article-section2">
+          <object :data="test" />
+        </section>
 <!--        <aside>-->
 <!--&lt;!&ndash;          // people here &ndash;&gt;-->
 <!--          <div ref="peoples" />-->
@@ -28,11 +31,14 @@
 
 <script setup lang="ts">
   import { onMounted, ref } from 'vue'
-  import { useRoute } from 'vue-router'
+  import { useRoute, useRouter } from 'vue-router'
 
   const shell = ref<HTMLElement | null>(null)
-  const peoples = ref<HTMLElement | null>(null)
+  const router = useRouter()
   const route = useRoute()
+
+  const profile = ref('')
+  const test = ref('')
 
   function requestData(owner: string, fileName: string): Promise<string> {
     const url = `https://jackal.link/p/${owner}/beacon/published/${fileName}.html`
@@ -43,10 +49,31 @@
     })
   }
 
+  function visitProfile() {
+    router.push(`/${profile.value}`)
+  }
+
   onMounted(async () => {
     console.log(route.params)
     if (shell.value && route.params.user?.length && route.params.slug?.length) {
-      shell.value.innerHTML = await requestData(route.params.user as string, route.params.slug[0]) || ''
+      profile.value = route.params.user as string
+      const data = await requestData(profile.value, route.params.slug[0]) || ''
+      shell.value.innerHTML = data
+
+      const userWrapper = document.createElement('div')
+      const userSpan = document.createElement('span')
+      userSpan.innerText = 'Written by: '
+      userWrapper.appendChild(userSpan)
+
+      const userBtn = document.createElement('button')
+      userBtn.title = profile.value
+      userBtn.onclick = visitProfile
+
+      userWrapper.appendChild(userBtn)
+      shell.value.getElementsByTagName('h1')[0].after(userWrapper)
+
+      const tmp = new File([data], route.params.slug[0])
+      test.value = URL.createObjectURL(tmp)
     }
   })
 
