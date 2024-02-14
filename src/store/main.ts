@@ -25,8 +25,6 @@ interface IBStore {
   isWalletInit(): boolean
   isFileIoInit(): boolean
   isRnsInit(): boolean
-
-  saveDraft(name: string, source: string): Promise<void>
 }
 
 class BStore implements IBStore {
@@ -63,6 +61,7 @@ class BStore implements IBStore {
       this.globalRns = await this.globalWallet.makeRnsHandler()
       this.loadAvailableRns()
     }
+
     this.globalFileIo.checkFolderIsFileTree(['s', workspace].join('/'))
     this.globalFileIo.checkFolderIsFileTree(['s', workspace, 'drafts'].join('/'))
     this.globalFileIo.checkFolderIsFileTree(['s', workspace, 'published'].join('/'))
@@ -141,18 +140,16 @@ class BStore implements IBStore {
     if (!this.globalFileIo) {
       throw 'oh fuck file io'
     }
-    try {
-      const beacons = [
-        workspace,
-        `${workspace}/drafts`,
-        `${workspace}/published`
-      ]
-      await this.globalFileIo.verifyFoldersExist(beacons);
+    if (await this.globalFileIo.checkFolderIsFileTree(['s', workspace].join('/'))) {
       await this.fetchDraftsFolder()
       await this.fetchPublishedFolder()
-    } catch (err: any) {
-      console.log(err);
-      console.log("AHHHHH");
+    } else {
+      await this.globalFileIo.generateInitialDirs(null, [workspace])
+      const beacon = await this.globalFileIo.downloadFolder(['s', workspace].join('/'))
+      await this.globalFileIo.createFolders(beacon, ['drafts', 'published'])
+
+      await this.fetchDraftsFolder()
+      await this.fetchPublishedFolder()
     }
   }
 

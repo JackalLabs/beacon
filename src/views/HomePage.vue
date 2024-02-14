@@ -38,7 +38,7 @@
   const route = useRoute()
 
   function requestData(owner: string, fileName: string): Promise<string> {
-    const url = `https://jackal.link/p/${owner}/newsboy/published/${fileName}`
+    const url = `https://jackal.link/p/${owner}/beacon/published/${fileName}.html`
     return fetch(url)
       .then(resp => resp.text())
       .catch(err => {
@@ -47,8 +47,8 @@
   }
 
   onMounted(async () => {
-    if (shell.value && route.params.user?.length && route.params.stub?.length) {
-      shell.value.innerHTML = await requestData(route.params.user[0], route.params.stub[0])
+    if (shell.value && route.params.user?.length && route.params.slug?.length) {
+      shell.value.innerHTML = await requestData(route.params.user[0], route.params.slug[0])
     }
   })
 

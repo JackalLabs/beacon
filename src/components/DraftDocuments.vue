@@ -46,8 +46,7 @@
     shouldName.value = true;
   }
 
-
-  onMounted(() => {
+  function refreshDrafts() {
     bStore.getDraftsFolder().then((folder:FolderHandler) => {
 
       console.dir(folder)
@@ -57,6 +56,10 @@
     }).catch((e) => {
       alert(e)
     })
+  }
+
+  onMounted(() => {
+    refreshDrafts()
   })
 
   async function saveDraft() {
@@ -66,10 +69,12 @@
     await bStore.saveDraft(saveDraftFileName.value, props.content).catch(alert)
 
     cancel()
+    refreshDrafts()
   }
 
   function loadFile(filename:string) {
     console.log(filename)
+
   }
 
 
@@ -95,8 +100,8 @@
   }
 
   .file-card {
-    background-color: lightgray;
-    border-radius: 8px;
+    background-color: #ddd;
+    border-radius: 4px;
     align-items: flex-start;
     flex-direction: column;
     display: flex;
