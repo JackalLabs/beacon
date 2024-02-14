@@ -166,7 +166,9 @@ class BStore implements IBStore {
     const final = {}
     const children = folder.getChildFiles()
     for (const name in children) {
-      final[name] = children[name].lastModified
+      const children = folder.getChildFiles()
+      const trunked = name.replace(/\.html$/, '')
+      final[trunked] = children[name].lastModified
     }
 
     await this.globalFileIo.shuffle()
