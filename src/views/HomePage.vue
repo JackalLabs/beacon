@@ -13,7 +13,7 @@
       </div>
       <main v-else id="home-main">
         <section id="article-section">
-          <div id="article" ref="shell" >
+          <div class=" ck-content" id="article" ref="shell" >
             <span class="loader"></span>
           </div>
         </section>

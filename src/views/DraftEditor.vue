@@ -15,7 +15,7 @@
       <h1>Beacon Editor</h1>
       <main id="editor-main" v-if="walletInit">
         <section>
-          <CKE id="editor" :editor="CustomCKEditor" v-model="editorData" :config="{}" />
+          <CKE id="editor" :editor="CustomCKEditor" v-model="editorData" :config="{mediaEmbed: {previewsInData: true}}" />
         </section>
         <aside>
           <DraftDocuments :content="editorData" :setter="setEditorText"/>
