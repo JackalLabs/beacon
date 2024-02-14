@@ -19,15 +19,18 @@
 <script setup lang="ts">
   import { onMounted, ref } from 'vue'
   import { useRoute } from 'vue-router'
-  import { bStore } from '@/store/main.ts'
 
   const shell = ref<HTMLElement | null>(null)
   const peoples = ref<HTMLElement | null>(null)
   const route = useRoute()
 
   async function requestData(owner: string): Promise<string> {
-    // TODO: Get user page data
-    return owner
+    const url = `https://jackal.link/p/${owner}/beacon/worx`
+    return fetch(url)
+      .then(resp => resp.text())
+      .catch(err => {
+        throw err
+      })
   }
 
   onMounted(async () => {

@@ -18,12 +18,14 @@ interface IBStore {
 
   getOwnedRns(): IRnsOwnedHashMap | null
   getJackalAddress(): string
+  getWorkspaceFolder(): FolderHandler
   getDraftsFolder(): FolderHandler
   getPublishedFolder(): FolderHandler
   loadDraft(name: string): Promise<string>
 
   saveDraft(name: string, source: string): Promise<void>
   publishFinal(name: string, source: string): Promise<void>
+  compilePublications(): Promise<void>
 
   isWalletInit(): boolean
   isFileIoInit(): boolean
@@ -37,6 +39,7 @@ class BStore implements IBStore {
   private jackalAddress: string
   private ownedRns: IRnsOwnedHashMap | null
 
+  private workspaceFolder: IFolderHandler | null
   private draftsFolder: IFolderHandler | null
   private publishedFolder: IFolderHandler | null
 
@@ -47,6 +50,7 @@ class BStore implements IBStore {
     this.jackalAddress = ''
 
     this.ownedRns = null
+    this.workspaceFolder = null
     this.draftsFolder = null
     this.publishedFolder = null
   }
@@ -73,6 +77,13 @@ class BStore implements IBStore {
 
   getJackalAddress(): string {
     return this.jackalAddress
+  }
+
+  async getWorkspaceFolder(): FolderHandler {
+    if (!this.workspaceFolder) {
+      throw Error('no workspace')
+    }
+    return this.workspaceFolder
   }
 
   async getDraftsFolder(): FolderHandler {
@@ -142,6 +153,41 @@ class BStore implements IBStore {
     }
     await this.globalFileIo.staggeredUploadFiles(upload, this.publishedFolder, { complete: 0, timer: 0 })
     await this.fetchPublishedFolder()
+
+    await this.compilePublications()
+  }
+
+  async compilePublications(): Promise<void> {
+    if (!this.globalFileIo || !this.publishedFolder) {
+      throw 'oh fuck file io'
+    }
+
+    const folder = this.getPublishedFolder()
+    const final = {}
+    const children = folder.getChildFiles()
+    for (const name in children) {
+      final[name] = children[name].lastModified
+    }
+
+    await this.globalFileIo.shuffle()
+
+    const fileName = 'worx'
+    const worxFile = new File([JSON.stringify(final)], fileName)
+    const handler = await FileUploadHandler.trackFile(worxFile, this.workspaceFolder.getMyPath())
+    const upload: IUploadList = {}
+    upload[fileName] = {
+      data: null,
+      exists: false,
+      handler,
+      key: fileName,
+      uploadable: await handler.getForPublicUpload()
+    }
+    await this.globalFileIo.staggeredUploadFiles(upload, this.workspaceFolder, { complete: 0, timer: 0 })
+    await this.fetchWorkspaceFolder()
+  }
+
+  private async fetchWorkspaceFolder(): Promise<void> {
+    this.workspaceFolder = await this.globalFileIo.downloadFolder(['s', workspace].join('/'))
   }
 
   private async fetchDraftsFolder(): Promise<void> {
@@ -164,12 +210,16 @@ class BStore implements IBStore {
       throw 'oh fuck file io'
     }
     if (await this.globalFileIo.checkFolderIsFileTree(['s', workspace].join('/'))) {
+      await this.fetchWorkspaceFolder()
       await this.fetchDraftsFolder()
       await this.fetchPublishedFolder()
     } else {
       await this.globalFileIo.generateInitialDirs(null, [workspace])
-      const beacon = await this.globalFileIo.downloadFolder(['s', workspace].join('/'))
-      await this.globalFileIo.createFolders(beacon, ['drafts', 'published'])
+      await this.fetchWorkspaceFolder()
+      if (!this.workspaceFolder) {
+        throw 'oh fuck workspace folder'
+      }
+      await this.globalFileIo.createFolders(this.workspaceFolder, ['drafts', 'published'])
 
       await this.fetchDraftsFolder()
       await this.fetchPublishedFolder()
