@@ -4,7 +4,7 @@
       <h2>Save Draft</h2>
       <div id="draft-name"><label>
         Draft Name:
-        <input type="text" required />
+        <input type="text" required v-model="saveDraftFileName"/>
       </label></div>
       <div id="draft-buttons">
         <button id="btn-save" @click="saveDraft">Save</button>
@@ -18,8 +18,8 @@
   <h3 class="add-button" @click="openSaveDraft">+</h3>
   <ul class="files">
     <li v-for="item in files">
-      <div class="file-card" @click="loadFile(item.name)">
-        <h3>{{ item.name }}</h3>
+      <div class="file-card" @click="loadFile(item)">
+        <h3>{{ item }}</h3>
       </div>
     </li>
   </ul>
@@ -27,27 +27,16 @@
 </template>
 
 <script setup lang="ts">
-  import { ref } from 'vue'
+  import { bStore } from '@/store/main.ts'
+
+  import { ref, onMounted, Ref } from 'vue'
+  import { FolderHandler } from '@jackallabs/jackal.js'
   const shouldName = ref(false)
+  const saveDraftFileName = ref("")
 
-  const files = ref([
-    {name: "test1"},
-    {name: "test2"},
-    {name: "test3"},
-    {name: "test4"},
-    {name: "test5"},
-    {name: "test1"},
-    {name: "test2"},
-    {name: "test3"},
-    {name: "test4"},
-    {name: "test5"},
-    {name: "test1"},
-    {name: "test2"},
-    {name: "test3"},
-    {name: "test4"},
-    {name: "test5"}
-  ])
+  const props = defineProps(['content'])
 
+  const files:Ref<string[]> = ref([])
 
   function cancel() {
     shouldName.value = false;
@@ -58,8 +47,24 @@
   }
 
 
-  function saveDraft() {
+  onMounted(() => {
+    bStore.getDraftsFolder().then((folder:FolderHandler) => {
+
+      console.dir(folder)
+
+      const children = folder.getChildFiles()
+      files.value = Object.keys(children)
+    }).catch((e) => {
+      alert(e)
+    })
+  })
+
+  async function saveDraft() {
     console.log("saving!")
+    console.log(props.content)
+
+    await bStore.saveDraft(saveDraftFileName.value, props.content).catch(alert)
+
     cancel()
   }
 

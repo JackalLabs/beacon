@@ -22,6 +22,8 @@ interface IBStore {
   isWalletInit(): boolean
   isFileIoInit(): boolean
   isRnsInit(): boolean
+
+  saveDraft(name: string, source: string): Promise<void>
 }
 
 class BStore implements IBStore {

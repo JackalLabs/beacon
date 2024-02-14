@@ -1,10 +1,10 @@
 <template>
   <div class="template-container">
     <div>
-      <button>Connect Wallet</button>
+      <button @click="connectWallet">Connect Wallet</button>
       <button>Get Jackal</button>
     </div>
-    <div class="main-container">
+    <div class="main-container" v-if="walletInit">
       <h1>Dashboard</h1>
       <main>
         <section>
@@ -12,7 +12,7 @@
         </section>
         <aside>
 <!--          // folders-->
-          <DraftDocuments />
+          <DraftDocuments :content="editorData"/>
         </aside>
       </main>
     </div>
@@ -20,12 +20,21 @@
 </template>
 
 <script setup lang="ts">
+  import { bStore } from '@/store/main.ts'
   import CustomCKEditor from '@jackallabs/ck5-custom'
   import CKEditor from '@ckeditor/ckeditor5-vue'
   import DraftDocuments from '@/components/DraftDocuments.vue'
+  import { ref } from 'vue'
 
   const CKE = CKEditor.component
-  const editorData = '<p>Content of the editor.</p>'
+  const editorData = ref('<p>Content of the editor.</p>')
+
+  const walletInit = ref(false)
+
+  async function connectWallet() {
+    await bStore.initWallet("keplr").catch(alert)
+    walletInit.value = bStore.isWalletInit()
+  }
 
 </script>
 
