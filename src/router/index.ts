@@ -13,7 +13,7 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('@/views/UserSettings.vue')
   },
   {
-    path: '/:user/:stub(.*)*',
+    path: '/:user/:slug(.*)*',
     name: 'Home',
     component: () => import('@/views/HomePage.vue')
   }
