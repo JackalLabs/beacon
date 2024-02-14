@@ -120,7 +120,9 @@
     border-bottom: black solid 4px;
     border-top: black solid 1px;
     border-right: black solid 1px;
-
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .work-body:hover {

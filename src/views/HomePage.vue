@@ -64,9 +64,12 @@
       const userSpan = document.createElement('span')
       userSpan.innerText = 'Written by: '
       userWrapper.appendChild(userSpan)
+      userWrapper.id = "user-wrapper"
 
       const userBtn = document.createElement('button')
+      userBtn.classList.add("undo-button")
       userBtn.title = profile.value
+      userBtn.innerHTML = profile.value
       userBtn.onclick = visitProfile
 
       userWrapper.appendChild(userBtn)
@@ -152,6 +155,10 @@
     }
   }
 
+  #article-section2 {
+    display: none;
+  }
+
 
   .hero {
     height: 80vh;
@@ -181,5 +188,16 @@
     }
 
 
+  }
+
+  .undo-button {
+    background: none!important;
+    border: none;
+    padding: 0!important;
+  }
+
+  #user-wrapper {
+    border-bottom: black solid 1px;
+    padding-bottom: 20px;
   }
 </style>
