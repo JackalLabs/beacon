@@ -19,6 +19,7 @@ interface IBStore {
   getOwnedRns(): IRnsOwnedHashMap | null
   getJackalAddress(): string
   getDraftsFolder(): FolderHandler
+  getPublishedFolder(): FolderHandler
   loadDraft(name: string): Promise<string>
 
   saveDraft(name: string, source: string): Promise<void>
@@ -79,6 +80,13 @@ class BStore implements IBStore {
       throw Error('no drafts')
     }
     return this.draftsFolder
+  }
+
+  async getPublishedFolder(): FolderHandler {
+    if (!this.publishedFolder) {
+      throw Error('no published')
+    }
+    return this.publishedFolder
   }
 
   async loadDraft(name: string): Promise<string> {

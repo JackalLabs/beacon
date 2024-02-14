@@ -40,13 +40,18 @@
   const CKE = CKEditor.component
   const editorData = ref('')
 
-  const walletInit = ref(false)
+  const walletInit = ref(bStore.isWalletInit())
 
   const setEditorText = function(s:string) {
     editorData.value = s
   }
 
   async function connectWallet() {
+    if (bStore.isWalletInit()) {
+      walletInit.value = bStore.isWalletInit()
+      return
+    }
+
     await bStore.initWallet("keplr").catch(alert)
     walletInit.value = bStore.isWalletInit()
   }
