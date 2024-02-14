@@ -140,7 +140,7 @@ class BStore implements IBStore {
     if (!this.globalFileIo) {
       throw 'oh fuck file io'
     }
-    if (false && await this.globalFileIo.checkFolderIsFileTree(['s', workspace].join('/'))) {
+    if (await this.globalFileIo.checkFolderIsFileTree(['s', workspace].join('/'))) {
       await this.fetchDraftsFolder()
       await this.fetchPublishedFolder()
     } else {
