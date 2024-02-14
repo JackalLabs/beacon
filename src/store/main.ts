@@ -1,4 +1,5 @@
 import type {
+  IFileDownloadHandler,
   IFileIo,
   IFolderHandler,
   IRnsHandler,
@@ -18,6 +19,7 @@ interface IBStore {
   getOwnedRns(): IRnsOwnedHashMap | null
   getJackalAddress(): string
   getDraftsFolder(): FolderHandler
+  loadDraft(name: string): Promise<string>
 
   saveDraft(name: string, source: string): Promise<void>
   publishFinal(name: string, source: string): Promise<void>
@@ -61,10 +63,6 @@ class BStore implements IBStore {
       this.globalRns = await this.globalWallet.makeRnsHandler()
       this.loadAvailableRns()
     }
-
-    this.globalFileIo.checkFolderIsFileTree(['s', workspace].join('/'))
-    this.globalFileIo.checkFolderIsFileTree(['s', workspace, 'drafts'].join('/'))
-    this.globalFileIo.checkFolderIsFileTree(['s', workspace, 'published'].join('/'))
     await this.prepWorkspace()
   }
 
@@ -81,6 +79,20 @@ class BStore implements IBStore {
       throw Error('no drafts')
     }
     return this.draftsFolder
+  }
+
+  async loadDraft(name: string): Promise<string> {
+    if (!this.globalFileIo || !this.draftsFolder) {
+      throw 'oh fuck file io'
+    }
+
+    const details = {
+      rawPath: this.draftsFolder.getMyChildPath(name),
+      owner: this.jackalAddress,
+      isFolder: false
+    }
+    const download = await this.globalFileIo.downloadFile(details, { track: 0 }) as IFileDownloadHandler
+    return await download.receiveBacon().text()
   }
 
   async saveDraft(name: string, source: string): Promise<void> {
