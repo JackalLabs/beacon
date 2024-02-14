@@ -85,14 +85,13 @@ class BStore implements IBStore {
 
     const tmpFile = new File([source], name)
     const handler = await FileUploadHandler.trackFile(tmpFile, this.draftsFolder.getMyPath())
-    const upload: IUploadList = {
-      name: {
-        data: null,
-        exists: false,
-        handler,
-        key: name,
-        uploadable: await handler.getForUpload()
-      }
+    const upload: IUploadList = {}
+    upload[name] = {
+      data: null,
+      exists: false,
+      handler,
+      key: name,
+      uploadable: await handler.getForUpload()
     }
     await this.globalFileIo.staggeredUploadFiles(upload, this.draftsFolder, { complete: 0, timer: 0 })
     await this.fetchDraftsFolder()
