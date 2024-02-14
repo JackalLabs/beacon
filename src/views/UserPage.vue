@@ -8,10 +8,11 @@
             <div v-else>
               <h1>{{ address }}'s Worx</h1>
               <ul class="work-list">
-                <li  v-for="item in worx">
-<!--                  /%address%/item-->
+                <li class="work-item" v-for="item in worx">
                   <router-link :to="`/` + address + `/` + item">
-                    <h2>{{ item }}</h2>
+                    <div class="work-body">
+                      <h2>{{ item }}</h2>
+                    </div>
                   </router-link>
                 </li>
               </ul>
@@ -103,8 +104,32 @@
     list-style: none;
     padding-left: 0px;
     margin: 0px;
+    display: flex;
+    flex-direction: column;
+    max-width: 30vw;
+    margin: 0px auto;
   }
 
+  .work-item {
+  }
+
+  .work-body {
+    min-height: 200px;
+    color: black;
+
+    margin-top: 20px;
+
+    border-left: lightcoral solid 8px;
+    border-bottom: black solid 4px;
+    border-top: black solid 1px;
+    border-right: black solid 1px;
+
+  }
+
+  .work-body:hover {
+    background-color: #f0f0f0;
+    border-bottom: black solid 8px;
+  }
 
 
 
