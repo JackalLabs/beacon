@@ -14,7 +14,7 @@ export const navItems: INavOption[] = [
     label: 'Editor',
     desc: '',
     path: '/editor'
-  },
+  }
   // {
   //   label: 'Settings',
   //   desc: '',

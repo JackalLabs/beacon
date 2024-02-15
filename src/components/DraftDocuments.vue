@@ -1,22 +1,32 @@
 <template>
-  <div class="background-blocker" v-if="shouldDraftName || shouldPubName" @click.self="cancel">
+  <div class="background-blocker" v-if="shouldDraftName || shouldPubName || error.length" @click.self="cancel">
     <div id="name-modal" class="modal" v-if="shouldDraftName">
       <h2>Save Draft</h2>
       <div id="draft-name"><label>
         Draft Name:
-        <input type="text" required v-model="saveDraftFileName"/>
+        <input type="text" required v-model="saveDraftFileName" />
       </label></div>
+      <span class="cost">Cost to save: <span class="colorful">{{ cost.toFixed(3) }} JKL</span></span>
+      <span class="error colorful" v-if="balance < cost">You don't have enough JKL to save</span>
       <div id="draft-buttons">
-        <button id="btn-save" @click="saveDraft">Save</button>
+        <button id="btn-save" @click="saveDraft" :disabled="balance < cost">Save</button>
         <button id="btn-cancel" @click="cancel">Cancel</button>
+      </div>
+    </div>
+    <div id="error-modal" class="modal" v-if="error.length">
+      <h2>Upload Error</h2>
+      <span class="cost">This file failed to save, please try again.</span>
+      <div id="draft-buttons">
+        <button id="btn-cancel" @click="cancel">Okay</button>
       </div>
     </div>
     <div id="publish-modal" class="modal" v-if="shouldPubName">
       <h2>Publish Document</h2>
       <div id="draft-name"><label>
         Published Name:
-        <input type="text" required v-model="saveDraftFileName"/>
+        <input type="text" required v-model="saveDraftFileName" />
       </label></div>
+      <span class="cost">Cost to publish: <span class="colorful">{{ cost.toFixed(3) }}jkl</span></span>
       <div id="draft-buttons">
         <button id="btn-save" @click="publishFile">Save</button>
         <button id="btn-cancel" @click="cancel">Cancel</button>
@@ -27,50 +37,71 @@
     Loading...
   </div>
 
-<div class="draft-docs" >
-  <h2>My Drafts</h2>
-  <div class="action-buttons">
-    <button class="add-button" @click="openSaveDraft">Save</button>
-    <button class="public-button" @click="openPubDraft">Pub.</button>
+  <div class="draft-docs">
+    <h2>My Drafts</h2>
+    <div class="action-buttons">
+      <button class="add-button" @click="openSaveDraft">Save</button>
+      <button class="public-button" @click="openPubDraft">Pub.</button>
+    </div>
+    <ul class="files">
+      <li class="draft-item" v-for="item in files">
+        <div class="file-card" @click="loadFile(item)">
+          <h3>{{ item }}</h3>
+        </div>
+      </li>
+    </ul>
   </div>
-  <ul class="files">
-    <li class="draft-item" v-for="item in files">
-      <div class="file-card" @click="loadFile(item)">
-        <h3>{{ item }}</h3>
-      </div>
-    </li>
-  </ul>
-</div>
 </template>
 
 <script setup lang="ts">
   import { bStore } from '@/store/main.ts'
 
-  import { ref, onMounted, Ref } from 'vue'
-  import { FolderHandler } from '@jackallabs/jackal.js'
+  import { ref, onMounted, Ref, computed } from 'vue'
+
   const shouldDraftName = ref(false)
   const shouldPubName = ref(false)
 
   const loading = ref(false)
-  const saveDraftFileName = ref("")
+  const saveDraftFileName = ref('')
 
   const props = defineProps(['content', 'setter'])
 
-  const files:Ref<string[]> = ref([])
+  const files: Ref<string[]> = ref([])
 
-  function cancel() {
-    shouldDraftName.value = false;
-    shouldPubName.value = false;
+  const cost = ref(0)
+
+  const error = ref('')
+
+  const balance = computed(() => {
+    return bStore.getJackalBalance()
+  })
+
+  async function updatePrice () {
+
+    const count = props.content.toString().length
+    const m = await bStore.getPrice(count)
+    cost.value = m / 1000000;
+
+    await bStore.updateJackalBalance()
   }
 
-  function openSaveDraft() {
-    shouldDraftName.value = true;
-  }
-  function openPubDraft() {
-    shouldPubName.value = true;
+  function cancel () {
+    shouldDraftName.value = false
+    shouldPubName.value = false
+    error.value = ''
   }
 
-  function refreshDrafts() {
+  function openSaveDraft () {
+    shouldDraftName.value = true
+    updatePrice()
+  }
+
+  function openPubDraft () {
+    shouldPubName.value = true
+    updatePrice()
+  }
+
+  function refreshDrafts () {
     const folder = bStore.getDraftsFolder()
     files.value = Object.keys(folder.getChildFiles())
   }
@@ -79,31 +110,36 @@
     refreshDrafts()
   })
 
-  async function saveDraft() {
+  function fail(err:string) {
+    cancel()
+    error.value = err
+  }
+
+  async function saveDraft () {
     if (saveDraftFileName.value.length == 0) {
-      alert("must enter name")
+      alert('must enter name')
       return
     }
     loading.value = true
-    await bStore.saveDraft(saveDraftFileName.value, props.content).catch(alert)
+    await bStore.saveDraft(saveDraftFileName.value, props.content).catch(fail)
     cancel()
     refreshDrafts()
     loading.value = false
   }
 
-  async function publishFile() {
+  async function publishFile () {
     if (saveDraftFileName.value.length == 0) {
-      alert("must enter name")
+      alert('must enter name')
       return
     }
     loading.value = true
-    await bStore.publishFinal(saveDraftFileName.value, props.content).catch(alert)
+    await bStore.publishFinal(saveDraftFileName.value, props.content).catch(fail)
     cancel()
     refreshDrafts()
     loading.value = false
   }
 
-  async function loadFile(filename:string) {
+  async function loadFile (filename: string) {
     loading.value = true
     const s = await bStore.loadDraft(filename).catch(alert)
     props.setter(s)
@@ -111,11 +147,9 @@
   }
 
 
-
 </script>
 
 <style lang="scss">
-
 
 
   .draft-item {
@@ -134,7 +168,7 @@
     display: flex;
     padding: 4px 10px 4px 10px;
     cursor: pointer;
-    border-left: lightcoral solid 4px;
+    border-left: var(--beacon-color) solid 4px;
     border-bottom: black solid 1px;
     box-sizing: border-box;
   }
@@ -197,12 +231,17 @@
     z-index: 100;
   }
 
+
+  .error {
+    margin-top: 10px;
+  }
+
   .modal {
     background-color: #fafafa;
     width: 40vw;
     max-width: 432px;
     height: 20vh;
-    min-height: 200px;
+    min-height: 260px;
     position: absolute;
     top: 50vh;
     left: 50vw;
@@ -213,13 +252,14 @@
 
 
     border-bottom: black solid 4px;
-    border-left: lightcoral solid 16px;
+    border-left: var(--beacon-color) solid 16px;
     border-top: black solid 1px;
     border-right: black solid 1px;
-
+    a:hover {
+      text-decoration: underline;
+    }
 
   }
-
 
 
   #draft-buttons {
@@ -240,6 +280,20 @@
     bottom: 10px;
     font-size: 2rem;
   }
+
+  .cost {
+    margin-top: 10px;
+  }
+
+  .colorful {
+    color: var(--beacon-color);
+    font-weight: bold;
+  }
+
+  .colorful:hover {
+    color: var(--beacon-color);
+  }
+
 
 
 </style>

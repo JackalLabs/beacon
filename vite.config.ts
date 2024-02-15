@@ -8,11 +8,11 @@ import nodePolyfills from 'vite-plugin-node-stdlib-browser'
 export default defineConfig({
   plugins: [
     vue(),
-    nodePolyfills(),
+    nodePolyfills()
   ],
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url)),
+      '@': fileURLToPath(new URL('./src', import.meta.url))
     }
   }
 })

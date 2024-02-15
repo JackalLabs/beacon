@@ -18,9 +18,9 @@
 </template>
 
 <script setup lang="ts">
-import { bStore } from '@/store/main.ts'
+  import { bStore } from '@/store/main.ts'
 
-const myRns = bStore.getOwnedRns()
+  const myRns = bStore.getOwnedRns()
 
 </script>
 

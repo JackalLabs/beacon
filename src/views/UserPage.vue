@@ -2,23 +2,26 @@
   <div class="template-container">
     <div class="main-container">
       <main id="user-main">
-<!--        <section>-->
-          <div>
-            <span v-if="!worx.length" class="loader"></span>
-            <div v-else>
-              <h1 id="work-title">{{ address.length > 20 ? address.toString().substring(0, 10) + "..." + address.toString().substring(10, 20) : convertToTitleCase(address.toString()) }}'s Beams</h1>
-              <ul class="work-list">
-                <li class="work-item" v-for="item in worx">
-                  <router-link :to="`/` + address + `/` + item.name">
-                    <div class="work-body">
-                      <span>{{ item.date }}</span>
-                      <h2>{{ item.name }}</h2>
-                    </div>
-                  </router-link>
-                </li>
-              </ul>
-            </div>
+        <!--        <section>-->
+        <div>
+          <span v-if="(!worx.length) && !empty" class="loader"></span>
+          <div v-else>
+            <h1 id="work-title">
+              {{ address.length > 20 ? address.toString().substring(0, 10) + '...' + address.toString().substring(10, 20) : convertToTitleCase(address.toString())
+              }}'s Beams</h1>
+            <span class="no-beams" v-if="empty">User has no beams</span>
+            <ul class="work-list">
+              <li class="work-item" v-for="item in worx">
+                <router-link :to="`/` + address + `/` + item.name">
+                  <div class="work-body">
+                    <span>{{ item.date }}</span>
+                    <h2>{{ item.name }}</h2>
+                  </div>
+                </router-link>
+              </li>
+            </ul>
           </div>
+        </div>
       </main>
     </div>
   </div>
@@ -32,18 +35,20 @@
   // const peoples = ref<HTMLElement | null>(null)
   const route = useRoute()
 
-  const worx:Ref<any[]> = ref([])
+  const worx: Ref<any[]> = ref([])
+
+  const empty = ref(false)
 
   const address = route.params.user
 
-  function convertToTitleCase(str:string) {
+  function convertToTitleCase (str: string) {
     if (!str) {
-      return ""
+      return ''
     }
-    return str.toLowerCase().replace(/\b\w/g, s => s.toUpperCase());
+    return str.toLowerCase().replace(/\b\w/g, s => s.toUpperCase())
   }
 
-  async function requestData(owner: string): Promise<any> {
+  async function requestData (owner: string): Promise<any> {
     const url = `https://jackal.link/p/${owner}/beacon/worx`
     return fetch(url)
       .then(resp => resp.json())
@@ -52,21 +57,22 @@
       })
   }
 
-  async function updateWorx(owner: string) {
-    console.log(owner)
-    const data = await requestData(owner).catch(alert)
-    console.log(data)
-    for ( const k in data) {
-      const d = data[k]
+  async function updateWorx (owner: string) {
+    const options: any = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' }
+    requestData(owner).then((data) => {
+      for (const k in data) {
+        const d = data[k]
+        const date = new Date(d)
+        const s = date.toLocaleDateString('en-us', options)
 
-      const date = new Date(d)
-      const options:any = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' };
+        worx.value.unshift({ name: k, date: s })
+      }
+      console.log(worx.value)
+    }).catch(() => {
+      console.log("user has no works")
+      empty.value = true
+    })
 
-      const s = date.toLocaleDateString('en-us', options)
-
-      worx.value.unshift({name: k, date: s})
-    }
-    console.log(worx.value)
 
   }
 
@@ -86,6 +92,7 @@
     display: flex;
     flex-direction: column;
   }
+
   .loader {
     width: 48px;
     height: 48px;
@@ -133,7 +140,7 @@
 
     margin-top: 20px;
 
-    border-left: lightcoral solid 8px;
+    border-left: var(--beacon-color) solid 8px;
     border-bottom: black solid 4px;
     border-top: black solid 1px;
     border-right: black solid 1px;
@@ -157,6 +164,8 @@
     border-bottom: black solid 8px;
   }
 
-
+  .no-beams {
+    font-size: 1.7rem;
+  }
 
 </style>
