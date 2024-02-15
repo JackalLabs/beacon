@@ -14,22 +14,31 @@ import { sanitizeName } from '@/utils/conversion.ts'
 const workspace = 'beacon'
 
 interface IBStore {
-  initWallet(selectedWallet: string): Promise<void>
+  initWallet (selectedWallet: string): Promise<void>
 
-  getOwnedRns(): IRnsOwnedHashMap | null
-  getJackalAddress(): string
-  getWorkspaceFolder(): FolderHandler
-  getDraftsFolder(): FolderHandler
-  getPublishedFolder(): FolderHandler
-  loadDraft(name: string): Promise<string>
+  getOwnedRns (): IRnsOwnedHashMap | null
 
-  saveDraft(name: string, source: string): Promise<void>
-  publishFinal(name: string, source: string): Promise<void>
-  compilePublications(): Promise<void>
+  getJackalAddress (): string
 
-  isWalletInit(): boolean
-  isFileIoInit(): boolean
-  isRnsInit(): boolean
+  getWorkspaceFolder (): FolderHandler
+
+  getDraftsFolder (): FolderHandler
+
+  getPublishedFolder (): FolderHandler
+
+  loadDraft (name: string): Promise<string>
+
+  saveDraft (name: string, source: string): Promise<void>
+
+  publishFinal (name: string, source: string): Promise<void>
+
+  compilePublications (): Promise<void>
+
+  isWalletInit (): boolean
+
+  isFileIoInit (): boolean
+
+  isRnsInit (): boolean
 }
 
 class BStore implements IBStore {
@@ -43,7 +52,7 @@ class BStore implements IBStore {
   private draftsFolder: IFolderHandler | null
   private publishedFolder: IFolderHandler | null
 
-  constructor() {
+  constructor () {
     this.globalWallet = null
     this.globalFileIo = null
     this.globalRns = null
@@ -55,12 +64,12 @@ class BStore implements IBStore {
     this.publishedFolder = null
   }
 
-  async initWallet(selectedWallet: string = 'leap'): Promise<void> {
+  async initWallet (selectedWallet: string = 'leap'): Promise<void> {
     const walletConfig: IWalletConfig = {
       selectedWallet,
-      ...mainnetConfig,
-    };
-    this.globalWallet = await WalletHandler.trackWallet(walletConfig);
+      ...mainnetConfig
+    }
+    this.globalWallet = await WalletHandler.trackWallet(walletConfig)
     this.jackalAddress = this.globalWallet.getJackalAddress()
 
     this.globalFileIo = await this.globalWallet.makeFileIoHandler('1.1.x')
@@ -71,36 +80,36 @@ class BStore implements IBStore {
     await this.prepWorkspace()
   }
 
-  getOwnedRns(): IRnsOwnedHashMap | null {
+  getOwnedRns (): IRnsOwnedHashMap | null {
     return this.ownedRns
   }
 
-  getJackalAddress(): string {
+  getJackalAddress (): string {
     return this.jackalAddress
   }
 
-  getWorkspaceFolder(): FolderHandler {
+  getWorkspaceFolder (): FolderHandler {
     if (!this.workspaceFolder) {
       throw Error('no workspace')
     }
     return this.workspaceFolder
   }
 
-  getDraftsFolder(): FolderHandler {
+  getDraftsFolder (): FolderHandler {
     if (!this.draftsFolder) {
       throw Error('no drafts')
     }
     return this.draftsFolder
   }
 
-  getPublishedFolder(): FolderHandler {
+  getPublishedFolder (): FolderHandler {
     if (!this.publishedFolder) {
       throw Error('no published')
     }
     return this.publishedFolder
   }
 
-  async loadDraft(name: string): Promise<string> {
+  async loadDraft (name: string): Promise<string> {
     if (!this.globalFileIo || !this.draftsFolder) {
       throw 'oh fuck file io'
     }
@@ -114,7 +123,7 @@ class BStore implements IBStore {
     return await download.receiveBacon().text()
   }
 
-  async saveDraft(name: string, source: string): Promise<void> {
+  async saveDraft (name: string, source: string): Promise<void> {
     if (!this.globalFileIo || !this.draftsFolder) {
       throw 'oh fuck file io'
     }
@@ -134,7 +143,7 @@ class BStore implements IBStore {
     await this.fetchDraftsFolder()
   }
 
-  async publishFinal(name: string, source: string): Promise<void> {
+  async publishFinal (name: string, source: string): Promise<void> {
     if (!this.globalFileIo || !this.publishedFolder) {
       throw 'oh fuck file io'
     }
@@ -157,7 +166,7 @@ class BStore implements IBStore {
     await this.compilePublications()
   }
 
-  async compilePublications(): Promise<void> {
+  async compilePublications (): Promise<void> {
     if (!this.globalFileIo || !this.publishedFolder || !this.workspaceFolder) {
       throw 'oh fuck file io'
     }
@@ -188,26 +197,26 @@ class BStore implements IBStore {
     await this.fetchWorkspaceFolder()
   }
 
-  private async fetchWorkspaceFolder(): Promise<void> {
+  private async fetchWorkspaceFolder (): Promise<void> {
     this.workspaceFolder = await this.globalFileIo.downloadFolder(['s', workspace].join('/'))
   }
 
-  private async fetchDraftsFolder(): Promise<void> {
+  private async fetchDraftsFolder (): Promise<void> {
     this.draftsFolder = await this.globalFileIo.downloadFolder(['s', workspace, 'drafts'].join('/'))
   }
 
-  private async fetchPublishedFolder(): Promise<void> {
+  private async fetchPublishedFolder (): Promise<void> {
     this.publishedFolder = await this.globalFileIo.downloadFolder(['s', workspace, 'published'].join('/'))
   }
 
-  private async loadAvailableRns() {
+  private async loadAvailableRns () {
     if (!this.globalRns) {
       throw 'oh fuck rns'
     }
     this.ownedRns = await this.globalRns.findMyExistingNames()
   }
 
-  private async prepWorkspace(): Promise<void> {
+  private async prepWorkspace (): Promise<void> {
     if (!this.globalFileIo) {
       throw 'oh fuck file io'
     }
@@ -228,13 +237,15 @@ class BStore implements IBStore {
     }
   }
 
-  isWalletInit(): boolean {
+  isWalletInit (): boolean {
     return !!this.globalWallet
   }
-  isFileIoInit(): boolean {
+
+  isFileIoInit (): boolean {
     return !!this.globalFileIo
   }
-  isRnsInit(): boolean {
+
+  isRnsInit (): boolean {
     return !!this.globalRns
   }
 }

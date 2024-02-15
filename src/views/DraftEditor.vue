@@ -1,9 +1,9 @@
 <template>
   <div id="editor-temp" class="template-container">
     <div class="connect-buttons">
-      <button @click="connectWallet"  v-if=!walletInit>Connect Wallet</button>
+      <button @click="connectWallet" v-if=!walletInit>Connect Wallet</button>
       <router-link v-else :to="`/` + address">
-        <button >My Profile</button>
+        <button>My Profile</button>
       </router-link>
       <a href="https://app.osmosis.zone/?to=JKL&from=OSMO" target="_blank">
         <button>Get Jackal</button>
@@ -11,14 +11,15 @@
 
 
     </div>
-    <div class="main-container" >
-<!--      <h1>Beacon Editor</h1>-->
+    <div class="main-container">
+      <!--      <h1>Beacon Editor</h1>-->
       <main id="editor-main" v-if="walletInit">
         <section>
-          <CKE id="editor" :editor="CustomCKEditor" v-model="editorData" :config="{mediaEmbed: {previewsInData: true}}" />
+          <CKE id="editor" :editor="CustomCKEditor" v-model="editorData"
+               :config="{mediaEmbed: {previewsInData: true}}" />
         </section>
         <aside>
-          <DraftDocuments :content="editorData" :setter="setEditorText"/>
+          <DraftDocuments :content="editorData" :setter="setEditorText" />
         </aside>
       </main>
       <main v-else>
@@ -45,18 +46,18 @@
   const address = ref(bStore.getJackalAddress())
 
   const walletInit = ref(bStore.isWalletInit())
-  const setEditorText = function(s:string) {
+  const setEditorText = function(s: string) {
     editorData.value = s
   }
 
-  async function connectWallet() {
+  async function connectWallet () {
     if (bStore.isWalletInit()) {
       walletInit.value = bStore.isWalletInit()
       address.value = bStore.getJackalAddress()
       return
     }
 
-    await bStore.initWallet("keplr").catch(alert)
+    await bStore.initWallet('keplr').catch(alert)
     walletInit.value = bStore.isWalletInit()
     address.value = bStore.getJackalAddress()
   }
@@ -109,6 +110,7 @@
   .ck-powered-by, .ck-powered-by-balloon {
     display: none !important;
   }
+
   .ck-editor__editable, .editor-placeholder {
     min-height: 75vh;
     max-height: 500px;
@@ -140,7 +142,7 @@
 
   .blurry {
     position: absolute;
-    background: rgb(221,221,221);
+    background: rgb(221, 221, 221);
     //background: linear-gradient(61deg, rgba(170,170,170,1) 0%, rgba(239,239,239,1) 40%, rgba(221,221,221,1) 100%);
     width: 100%;
     height: 100%;
@@ -148,7 +150,7 @@
   }
 
   .folder-placeholder {
-   border-radius: 8px;
+    border-radius: 8px;
     width: 100%;
     height: 100%;
   }

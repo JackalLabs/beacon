@@ -5,25 +5,25 @@
         <div class="hero-info">
           <h1 id="hero-header">Beacon</h1>
           <span id="hero-text">Beacon is a fully decentralized publishing platform for writers, creators and anyone with something to say.</span>
-            <router-link id="cta-button" :to="'/editor'">
-              <button>Start Publishing</button>
-            </router-link>
+          <router-link id="cta-button" :to="'/editor'">
+            <button>Start Publishing</button>
+          </router-link>
         </div>
-          <div id="hero-art"></div>
+        <div id="hero-art"></div>
       </div>
       <main v-else id="home-main">
         <section id="article-section">
-          <div class=" ck-content" id="article" ref="shell" >
+          <div class=" ck-content" id="article" ref="shell">
             <span class="loader"></span>
           </div>
         </section>
         <section id="article-section2">
           <object :data="test" />
         </section>
-<!--        <aside>-->
-<!--&lt;!&ndash;          // people here &ndash;&gt;-->
-<!--          <div ref="peoples" />-->
-<!--        </aside>-->
+        <!--        <aside>-->
+        <!--&lt;!&ndash;          // people here &ndash;&gt;-->
+        <!--          <div ref="peoples" />-->
+        <!--        </aside>-->
       </main>
     </div>
   </div>
@@ -40,16 +40,16 @@
   const profile = ref('')
   const test = ref('')
 
-  function requestData(owner: string, fileName: string): Promise<string> {
+  function requestData (owner: string, fileName: string): Promise<string> {
     const url = `https://jackal.link/p/${owner}/beacon/published/${fileName}.html`
     return fetch(url)
       .then(resp => resp.text())
       .catch(err => {
-      throw err
-    })
+        throw err
+      })
   }
 
-  function visitProfile() {
+  function visitProfile () {
     router.push(`/${profile.value}`)
   }
 
@@ -64,10 +64,10 @@
       const userSpan = document.createElement('span')
       userSpan.innerText = 'Written by: '
       userWrapper.appendChild(userSpan)
-      userWrapper.id = "user-wrapper"
+      userWrapper.id = 'user-wrapper'
 
       const userBtn = document.createElement('button')
-      userBtn.classList.add("undo-button")
+      userBtn.classList.add('undo-button')
       userBtn.title = profile.value
       userBtn.innerHTML = profile.value
       userBtn.onclick = visitProfile
@@ -87,6 +87,7 @@
     padding: 0rem 4rem;
     height: 100%;
   }
+
   .main-container {
     height: 100%;
     flex-grow: 1;
@@ -121,15 +122,12 @@
   #hero-art {
     width: 100%;
     height: 100%;
-    background: lightcoral;
+    background: var(--beacon-color);
   }
 
   button {
     background-color: lightblue;
   }
-
-
-
 
 
   #article-section {
@@ -193,6 +191,7 @@
     #cta-button {
       margin-top: 20px;
     }
+
     h1 {
       margin-top: 0px;
     }
@@ -201,9 +200,9 @@
   }
 
   .undo-button {
-    background: none!important;
+    background: none !important;
     border: none;
-    padding: 0!important;
+    padding: 0 !important;
   }
 
   #user-wrapper {

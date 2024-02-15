@@ -4,7 +4,7 @@
       <h2>Save Draft</h2>
       <div id="draft-name"><label>
         Draft Name:
-        <input type="text" required v-model="saveDraftFileName"/>
+        <input type="text" required v-model="saveDraftFileName" />
       </label></div>
       <div id="draft-buttons">
         <button id="btn-save" @click="saveDraft">Save</button>
@@ -15,7 +15,7 @@
       <h2>Publish Document</h2>
       <div id="draft-name"><label>
         Published Name:
-        <input type="text" required v-model="saveDraftFileName"/>
+        <input type="text" required v-model="saveDraftFileName" />
       </label></div>
       <div id="draft-buttons">
         <button id="btn-save" @click="publishFile">Save</button>
@@ -27,20 +27,20 @@
     Loading...
   </div>
 
-<div class="draft-docs" >
-  <h2>My Drafts</h2>
-  <div class="action-buttons">
-    <button class="add-button" @click="openSaveDraft">Save</button>
-    <button class="public-button" @click="openPubDraft">Pub.</button>
+  <div class="draft-docs">
+    <h2>My Drafts</h2>
+    <div class="action-buttons">
+      <button class="add-button" @click="openSaveDraft">Save</button>
+      <button class="public-button" @click="openPubDraft">Pub.</button>
+    </div>
+    <ul class="files">
+      <li class="draft-item" v-for="item in files">
+        <div class="file-card" @click="loadFile(item)">
+          <h3>{{ item }}</h3>
+        </div>
+      </li>
+    </ul>
   </div>
-  <ul class="files">
-    <li class="draft-item" v-for="item in files">
-      <div class="file-card" @click="loadFile(item)">
-        <h3>{{ item }}</h3>
-      </div>
-    </li>
-  </ul>
-</div>
 </template>
 
 <script setup lang="ts">
@@ -48,29 +48,31 @@
 
   import { ref, onMounted, Ref } from 'vue'
   import { FolderHandler } from '@jackallabs/jackal.js'
+
   const shouldDraftName = ref(false)
   const shouldPubName = ref(false)
 
   const loading = ref(false)
-  const saveDraftFileName = ref("")
+  const saveDraftFileName = ref('')
 
   const props = defineProps(['content', 'setter'])
 
-  const files:Ref<string[]> = ref([])
+  const files: Ref<string[]> = ref([])
 
-  function cancel() {
-    shouldDraftName.value = false;
-    shouldPubName.value = false;
+  function cancel () {
+    shouldDraftName.value = false
+    shouldPubName.value = false
   }
 
-  function openSaveDraft() {
-    shouldDraftName.value = true;
-  }
-  function openPubDraft() {
-    shouldPubName.value = true;
+  function openSaveDraft () {
+    shouldDraftName.value = true
   }
 
-  function refreshDrafts() {
+  function openPubDraft () {
+    shouldPubName.value = true
+  }
+
+  function refreshDrafts () {
     const folder = bStore.getDraftsFolder()
     files.value = Object.keys(folder.getChildFiles())
   }
@@ -79,9 +81,9 @@
     refreshDrafts()
   })
 
-  async function saveDraft() {
+  async function saveDraft () {
     if (saveDraftFileName.value.length == 0) {
-      alert("must enter name")
+      alert('must enter name')
       return
     }
     loading.value = true
@@ -91,9 +93,9 @@
     loading.value = false
   }
 
-  async function publishFile() {
+  async function publishFile () {
     if (saveDraftFileName.value.length == 0) {
-      alert("must enter name")
+      alert('must enter name')
       return
     }
     loading.value = true
@@ -103,7 +105,7 @@
     loading.value = false
   }
 
-  async function loadFile(filename:string) {
+  async function loadFile (filename: string) {
     loading.value = true
     const s = await bStore.loadDraft(filename).catch(alert)
     props.setter(s)
@@ -111,11 +113,9 @@
   }
 
 
-
 </script>
 
 <style lang="scss">
-
 
 
   .draft-item {
@@ -134,7 +134,7 @@
     display: flex;
     padding: 4px 10px 4px 10px;
     cursor: pointer;
-    border-left: lightcoral solid 4px;
+    border-left: var(--beacon-color) solid 4px;
     border-bottom: black solid 1px;
     box-sizing: border-box;
   }
@@ -213,13 +213,12 @@
 
 
     border-bottom: black solid 4px;
-    border-left: lightcoral solid 16px;
+    border-left: var(--beacon-color) solid 16px;
     border-top: black solid 1px;
     border-right: black solid 1px;
 
 
   }
-
 
 
   #draft-buttons {

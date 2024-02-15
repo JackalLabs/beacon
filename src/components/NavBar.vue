@@ -12,7 +12,7 @@
 </template>
 
 <script setup lang="ts">
-import { navItems } from '@/config/nav.ts'
+  import { navItems } from '@/config/nav.ts'
 </script>
 
 <style lang="scss" scoped>
