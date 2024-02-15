@@ -1,6 +1,6 @@
 <template>
   <div class="template-container">
-    <div class="main-container">
+    <div class="main-container" id="settings-container">
       <h1>Dashboard</h1>
       <main>
         <section v-if="myRns">
@@ -26,4 +26,7 @@ const myRns = bStore.getOwnedRns()
 
 <style lang="scss">
 
+  #settings-container {
+    padding-top: 40px;
+  }
 </style>

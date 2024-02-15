@@ -12,7 +12,7 @@
 
     </div>
     <div class="main-container" >
-      <h1>Beacon Editor</h1>
+<!--      <h1>Beacon Editor</h1>-->
       <main id="editor-main" v-if="walletInit">
         <section>
           <CKE id="editor" :editor="CustomCKEditor" v-model="editorData" :config="{mediaEmbed: {previewsInData: true}}" />
@@ -23,7 +23,10 @@
       </main>
       <main v-else>
         <section>
-          <div class="editor-placeholder"></div>
+          <div class="editor-placeholder">
+            <div class="blurry"></div>
+            <span id="wallet-alert">Connect wallet to edit</span>
+          </div>
         </section>
         <aside>
           <div class="folder-placeholder"></div>
@@ -68,7 +71,7 @@
     display: grid;
     grid-template-columns: auto 200px;
     grid-template-rows: 1fr;
-    padding: 0rem 4rem;
+    padding: 40px 4rem 0rem;
   }
 
   #editor-temp {
@@ -85,9 +88,7 @@
     margin: 0px auto;
     flex-grow: 1;
     flex-basis: auto;
-
   }
-
   aside {
     width: 200px;
     min-height: 200px;
@@ -103,7 +104,7 @@
     display: none !important;
   }
   .ck-editor__editable, .editor-placeholder {
-    min-height: 65vh;
+    min-height: 75vh;
     max-height: 500px;
     overflow-y: scroll;
     box-sizing: border-box;
@@ -127,16 +128,32 @@
 
   .editor-placeholder {
     border-radius: 8px;
+    overflow: visible;
+    position: relative;
+  }
+
+  .blurry {
+    position: absolute;
+    background: rgb(221,221,221);
+    //background: linear-gradient(61deg, rgba(170,170,170,1) 0%, rgba(239,239,239,1) 40%, rgba(221,221,221,1) 100%);
+    width: 100%;
+    height: 100%;
     filter: blur(8px);
-    background-color: #dddddd;
   }
 
   .folder-placeholder {
    border-radius: 8px;
-    filter: blur(8px);
     width: 100%;
     height: 100%;
-    background-color: #dddddd
+  }
+
+  #wallet-alert {
+    font-size: 1.6rem;
+    filter: blur(0px);
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
   }
 
 </style>

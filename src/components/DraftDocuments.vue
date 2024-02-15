@@ -160,7 +160,7 @@
   .draft-docs {
     height: 100%;
     max-height: 500px;
-    min-height: 65vh;
+    min-height: 75vh;
     display: flex;
     flex-direction: column;
     padding-top: 8px;
