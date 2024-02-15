@@ -6,12 +6,13 @@
           <div>
             <span v-if="!worx.length" class="loader"></span>
             <div v-else>
-              <h1>{{ address }}'s Worx</h1>
+              <h1 id="work-title">{{ address.length > 20 ? address.toString().substring(0, 10) + "..." + address.toString().substring(10, 20) : convertToTitleCase(address.toString()) }}'s Beams</h1>
               <ul class="work-list">
                 <li class="work-item" v-for="item in worx">
-                  <router-link :to="`/` + address + `/` + item">
+                  <router-link :to="`/` + address + `/` + item.name">
                     <div class="work-body">
-                      <h2>{{ item }}</h2>
+                      <span>{{ item.date }}</span>
+                      <h2>{{ item.name }}</h2>
                     </div>
                   </router-link>
                 </li>
@@ -28,12 +29,19 @@
   import { useRoute } from 'vue-router'
   import { bStore } from '@/store/main.ts'
 
-  const peoples = ref<HTMLElement | null>(null)
+  // const peoples = ref<HTMLElement | null>(null)
   const route = useRoute()
 
-  const worx:Ref<string[]> = ref([])
+  const worx:Ref<any[]> = ref([])
 
   const address = route.params.user
+
+  function convertToTitleCase(str:string) {
+    if (!str) {
+      return ""
+    }
+    return str.toLowerCase().replace(/\b\w/g, s => s.toUpperCase());
+  }
 
   async function requestData(owner: string): Promise<any> {
     const url = `https://jackal.link/p/${owner}/beacon/worx`
@@ -48,9 +56,18 @@
     console.log(owner)
     const data = await requestData(owner).catch(alert)
     console.log(data)
-    for (const k in data) {
-      worx.value.unshift(k)
+    for ( const k in data) {
+      const d = data[k]
+
+      const date = new Date(d)
+      const options:any = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' };
+
+      const s = date.toLocaleDateString('en-us', options)
+
+      worx.value.unshift({name: k, date: s})
     }
+    console.log(worx.value)
+
   }
 
   onMounted(async () => {
@@ -111,7 +128,7 @@
   }
 
   .work-body {
-    min-height: 200px;
+    //min-height: 200px;
     color: black;
 
     margin-top: 20px;
@@ -121,8 +138,18 @@
     border-top: black solid 1px;
     border-right: black solid 1px;
     display: flex;
-    align-items: center;
+    flex-direction: column;
     justify-content: center;
+    align-items: flex-start;
+
+    span {
+      padding: 20px 10px 0px 20px;
+    }
+
+    h2 {
+      margin-top: 0px;
+      padding: 0px 0px 10px 20px;
+    }
   }
 
   .work-body:hover {

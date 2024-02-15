@@ -11,7 +11,7 @@
         <button id="btn-cancel" @click="cancel">Cancel</button>
       </div>
     </div>
-    <div id="name-modal" class="modal" v-if="shouldPubName">
+    <div id="publish-modal" class="modal" v-if="shouldPubName">
       <h2>Publish Document</h2>
       <div id="draft-name"><label>
         Published Name:
@@ -27,14 +27,14 @@
     Loading...
   </div>
 
-<div class="draft-docs">
-  <h2>Drafts</h2>
+<div class="draft-docs" >
+  <h2>My Drafts</h2>
   <div class="action-buttons">
     <button class="add-button" @click="openSaveDraft">Save</button>
     <button class="public-button" @click="openPubDraft">Pub.</button>
   </div>
   <ul class="files">
-    <li v-for="item in files">
+    <li class="draft-item" v-for="item in files">
       <div class="file-card" @click="loadFile(item)">
         <h3>{{ item }}</h3>
       </div>
@@ -80,6 +80,10 @@
   })
 
   async function saveDraft() {
+    if (saveDraftFileName.value.length == 0) {
+      alert("must enter name")
+      return
+    }
     loading.value = true
     await bStore.saveDraft(saveDraftFileName.value, props.content).catch(alert)
     cancel()
@@ -88,6 +92,10 @@
   }
 
   async function publishFile() {
+    if (saveDraftFileName.value.length == 0) {
+      alert("must enter name")
+      return
+    }
     loading.value = true
     await bStore.publishFinal(saveDraftFileName.value, props.content).catch(alert)
     cancel()
@@ -109,13 +117,8 @@
 <style lang="scss">
 
 
-  ul {
-    list-style: none;
-    padding: 12px 0px 0px 0px;
-    margin: 0px;
-  }
 
-  li {
+  .draft-item {
     margin: 0px auto 10px auto;
     max-width: 84%;
   }
@@ -149,6 +152,9 @@
     flex-grow: 1;
     flex-basis: auto;
     overflow-y: scroll;
+    list-style: none;
+    padding: 12px 0px 0px 0px;
+    margin: 0px;
   }
 
   .draft-docs {
@@ -187,12 +193,12 @@
     left: 0px;
     width: 100vw;
     height: 100vh;
-    background-color: rgba(255, 255, 255, 0.5);
+    background-color: rgba(0, 0, 0, 0.2);
     z-index: 100;
   }
 
   .modal {
-    background-color: #eeeeee;
+    background-color: #fafafa;
     width: 40vw;
     max-width: 432px;
     height: 20vh;
@@ -204,10 +210,13 @@
     flex-direction: column;
     justify-content: center;
 
-    border-radius: 8px;
-    border-style: solid;
-    border-color: #888888;
-    border-width: 6px;
+
+    border-bottom: black solid 4px;
+    border-left: lightcoral solid 16px;
+    border-top: black solid 1px;
+    border-right: black solid 1px;
+
+
   }
 
 
@@ -230,5 +239,6 @@
     bottom: 10px;
     font-size: 2rem;
   }
+
 
 </style>
