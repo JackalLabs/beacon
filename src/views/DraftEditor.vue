@@ -67,12 +67,7 @@
 </script>
 
 <style lang="scss">
-  #editor-main {
-    display: grid;
-    grid-template-columns: auto 200px;
-    grid-template-rows: 1fr;
-    padding: 40px 4rem 0rem;
-  }
+
 
   #editor-temp {
     display: flex;
@@ -88,7 +83,20 @@
     margin: 0px auto;
     flex-grow: 1;
     flex-basis: auto;
+
+    main {
+      padding-top: 40px;
+    }
   }
+
+  #editor-main {
+    display: grid;
+    grid-template-columns: auto 200px;
+    grid-template-rows: 1fr;
+    padding-left: 4rem;
+    padding-right: 4rem;
+  }
+
   aside {
     width: 200px;
     min-height: 200px;
