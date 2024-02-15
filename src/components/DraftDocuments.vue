@@ -128,7 +128,7 @@
   }
 
   .file-card {
-    border-radius: 4px 4px 0px 4px;
+    //border-radius: 4px 4px 0px 4px;
     align-items: flex-start;
     flex-direction: column;
     display: flex;

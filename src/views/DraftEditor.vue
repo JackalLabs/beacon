@@ -28,9 +28,6 @@
             <span id="wallet-alert">Connect wallet to edit</span>
           </div>
         </section>
-        <aside>
-          <div class="folder-placeholder"></div>
-        </aside>
       </main>
     </div>
   </div>
