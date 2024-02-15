@@ -71,6 +71,15 @@ button:focus-visible {
   flex-direction: column;
 }
 
+.template-container {
+  flex-grow: 1;
+  background-color: #fafafa;
+}
+
+h1 {
+  margin-top: 0px;
+}
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;

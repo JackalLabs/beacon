@@ -92,10 +92,7 @@
     flex-grow: 1;
     margin-top: 0px;
   }
-  .template-container {
-    flex-grow: 1;
-    background-color: #fafafa;
-  }
+
   .loader {
     width: 48px;
     height: 48px;
