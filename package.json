@@ -44,7 +44,7 @@
   "dependencies": {
     "@ckeditor/ckeditor5-vue": "^5.1.0",
     "@jackallabs/ck5-custom": "file:jackallabs-ck5-custom-0.0.0.tgz",
-    "@jackallabs/jackal.js": "^2.2.0",
+    "@jackallabs/jackal.js": "^2.3.0",
     "vite-plugin-node-stdlib-browser": "^0.2.1",
     "vue": "^3.3.4",
     "vue-router": "^4.1.6"

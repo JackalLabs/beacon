@@ -1,4 +1,5 @@
 import type {
+  ICoin,
   IFileDownloadHandler,
   IFileIo,
   IFolderHandler,
@@ -39,6 +40,8 @@ interface IBStore {
   isFileIoInit (): boolean
 
   isRnsInit (): boolean
+
+  getPrice (bytes:number): Promise<number>
 }
 
 class BStore implements IBStore {
@@ -47,6 +50,7 @@ class BStore implements IBStore {
   private globalRns: IRnsHandler | null
   private jackalAddress: string
   private ownedRns: IRnsOwnedHashMap | null
+  private jackalBalance: number
 
   private workspaceFolder: IFolderHandler | null
   private draftsFolder: IFolderHandler | null
@@ -57,6 +61,7 @@ class BStore implements IBStore {
     this.globalFileIo = null
     this.globalRns = null
     this.jackalAddress = ''
+    this.jackalBalance = 0
 
     this.ownedRns = null
     this.workspaceFolder = null
@@ -77,6 +82,7 @@ class BStore implements IBStore {
       this.globalRns = await this.globalWallet.makeRnsHandler()
       this.loadAvailableRns()
     }
+    await this.updateJackalBalance()
     await this.prepWorkspace()
   }
 
@@ -86,6 +92,16 @@ class BStore implements IBStore {
 
   getJackalAddress (): string {
     return this.jackalAddress
+  }
+
+  getJackalBalance (): number {
+    return this.jackalBalance
+  }
+
+  async updateJackalBalance (): Promise<void> {
+    const s:ICoin = await this.globalWallet?.getJackalBalance()
+    console.log(s)
+    this.jackalBalance = s.amount / 1000000.0
   }
 
   getWorkspaceFolder (): FolderHandler {
@@ -193,7 +209,7 @@ class BStore implements IBStore {
       key: fileName,
       uploadable: await handler.getForPublicUpload()
     }
-    await this.globalFileIo.staggeredUploadFiles(upload, this.workspaceFolder, { complete: 0, timer: 0 })
+    await this.globalFileIo.staggeredUploadFiles(upload, this.workspaceFolder, { complete: 0, timer: 0 }, true) //TODO: change payonce for v4
     await this.fetchWorkspaceFolder()
   }
 
@@ -247,6 +263,16 @@ class BStore implements IBStore {
 
   isRnsInit (): boolean {
     return !!this.globalRns
+  }
+
+  async getPrice (bytes:number): Promise<number> {
+    const request: any = {
+      bytes: bytes, // * 3, // TODO: v4 will fix this
+      duration: "1752000h",
+    };
+    const res:any = await this.globalWallet?.getQueryHandler().storageQuery.queryPriceCheck(request)
+    const price:number = res.value.price;
+    return price
   }
 }
 

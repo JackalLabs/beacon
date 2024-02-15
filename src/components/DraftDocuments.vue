@@ -1,14 +1,23 @@
 <template>
-  <div class="background-blocker" v-if="shouldDraftName || shouldPubName" @click.self="cancel">
+  <div class="background-blocker" v-if="shouldDraftName || shouldPubName || error.length" @click.self="cancel">
     <div id="name-modal" class="modal" v-if="shouldDraftName">
       <h2>Save Draft</h2>
       <div id="draft-name"><label>
         Draft Name:
         <input type="text" required v-model="saveDraftFileName" />
       </label></div>
+      <span class="cost">Cost to save: <span class="colorful">{{ cost.toFixed(3) }} JKL</span></span>
+      <span class="error colorful" v-if="balance < cost">You don't have enough JKL to save</span>
       <div id="draft-buttons">
-        <button id="btn-save" @click="saveDraft">Save</button>
+        <button id="btn-save" @click="saveDraft" :disabled="balance < cost">Save</button>
         <button id="btn-cancel" @click="cancel">Cancel</button>
+      </div>
+    </div>
+    <div id="error-modal" class="modal" v-if="error.length">
+      <h2>Upload Error</h2>
+      <span class="cost">This file failed to save, please try again.</span>
+      <div id="draft-buttons">
+        <button id="btn-cancel" @click="cancel">Okay</button>
       </div>
     </div>
     <div id="publish-modal" class="modal" v-if="shouldPubName">
@@ -17,6 +26,7 @@
         Published Name:
         <input type="text" required v-model="saveDraftFileName" />
       </label></div>
+      <span class="cost">Cost to publish: <span class="colorful">{{ cost.toFixed(3) }}jkl</span></span>
       <div id="draft-buttons">
         <button id="btn-save" @click="publishFile">Save</button>
         <button id="btn-cancel" @click="cancel">Cancel</button>
@@ -46,8 +56,7 @@
 <script setup lang="ts">
   import { bStore } from '@/store/main.ts'
 
-  import { ref, onMounted, Ref } from 'vue'
-  import { FolderHandler } from '@jackallabs/jackal.js'
+  import { ref, onMounted, Ref, computed } from 'vue'
 
   const shouldDraftName = ref(false)
   const shouldPubName = ref(false)
@@ -59,17 +68,37 @@
 
   const files: Ref<string[]> = ref([])
 
+  const cost = ref(0)
+
+  const error = ref('')
+
+  const balance = computed(() => {
+    return bStore.getJackalBalance()
+  })
+
+  async function updatePrice () {
+
+    const count = props.content.toString().length
+    const m = await bStore.getPrice(count)
+    cost.value = m / 1000000;
+
+    await bStore.updateJackalBalance()
+  }
+
   function cancel () {
     shouldDraftName.value = false
     shouldPubName.value = false
+    error.value = ''
   }
 
   function openSaveDraft () {
     shouldDraftName.value = true
+    updatePrice()
   }
 
   function openPubDraft () {
     shouldPubName.value = true
+    updatePrice()
   }
 
   function refreshDrafts () {
@@ -81,13 +110,18 @@
     refreshDrafts()
   })
 
+  function fail(err:string) {
+    cancel()
+    error.value = err
+  }
+
   async function saveDraft () {
     if (saveDraftFileName.value.length == 0) {
       alert('must enter name')
       return
     }
     loading.value = true
-    await bStore.saveDraft(saveDraftFileName.value, props.content).catch(alert)
+    await bStore.saveDraft(saveDraftFileName.value, props.content).catch(fail)
     cancel()
     refreshDrafts()
     loading.value = false
@@ -99,7 +133,7 @@
       return
     }
     loading.value = true
-    await bStore.publishFinal(saveDraftFileName.value, props.content).catch(alert)
+    await bStore.publishFinal(saveDraftFileName.value, props.content).catch(fail)
     cancel()
     refreshDrafts()
     loading.value = false
@@ -197,12 +231,17 @@
     z-index: 100;
   }
 
+
+  .error {
+    margin-top: 10px;
+  }
+
   .modal {
     background-color: #fafafa;
     width: 40vw;
     max-width: 432px;
     height: 20vh;
-    min-height: 200px;
+    min-height: 260px;
     position: absolute;
     top: 50vh;
     left: 50vw;
@@ -216,7 +255,9 @@
     border-left: var(--beacon-color) solid 16px;
     border-top: black solid 1px;
     border-right: black solid 1px;
-
+    a:hover {
+      text-decoration: underline;
+    }
 
   }
 
@@ -239,6 +280,20 @@
     bottom: 10px;
     font-size: 2rem;
   }
+
+  .cost {
+    margin-top: 10px;
+  }
+
+  .colorful {
+    color: var(--beacon-color);
+    font-weight: bold;
+  }
+
+  .colorful:hover {
+    color: var(--beacon-color);
+  }
+
 
 
 </style>

@@ -4,11 +4,12 @@
       <main id="user-main">
         <!--        <section>-->
         <div>
-          <span v-if="!worx.length" class="loader"></span>
+          <span v-if="(!worx.length) && !empty" class="loader"></span>
           <div v-else>
             <h1 id="work-title">
               {{ address.length > 20 ? address.toString().substring(0, 10) + '...' + address.toString().substring(10, 20) : convertToTitleCase(address.toString())
               }}'s Beams</h1>
+            <span class="no-beams" v-if="empty">User has no beams</span>
             <ul class="work-list">
               <li class="work-item" v-for="item in worx">
                 <router-link :to="`/` + address + `/` + item.name">
@@ -36,6 +37,8 @@
 
   const worx: Ref<any[]> = ref([])
 
+  const empty = ref(false)
+
   const address = route.params.user
 
   function convertToTitleCase (str: string) {
@@ -55,20 +58,21 @@
   }
 
   async function updateWorx (owner: string) {
-    console.log(owner)
-    const data = await requestData(owner).catch(alert)
-    console.log(data)
-    for (const k in data) {
-      const d = data[k]
+    const options: any = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' }
+    requestData(owner).then((data) => {
+      for (const k in data) {
+        const d = data[k]
+        const date = new Date(d)
+        const s = date.toLocaleDateString('en-us', options)
 
-      const date = new Date(d)
-      const options: any = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' }
+        worx.value.unshift({ name: k, date: s })
+      }
+      console.log(worx.value)
+    }).catch(() => {
+      console.log("user has no works")
+      empty.value = true
+    })
 
-      const s = date.toLocaleDateString('en-us', options)
-
-      worx.value.unshift({ name: k, date: s })
-    }
-    console.log(worx.value)
 
   }
 
@@ -160,5 +164,8 @@
     border-bottom: black solid 8px;
   }
 
+  .no-beams {
+    font-size: 1.7rem;
+  }
 
 </style>

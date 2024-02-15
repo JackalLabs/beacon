@@ -5,6 +5,7 @@
       <router-link v-else :to="`/` + address">
         <button>My Profile</button>
       </router-link>
+<!--      <span class="balance" v-if=walletInit>{{ balance.toFixed(3) }} JKL</span>-->
       <a href="https://app.osmosis.zone/?to=JKL&from=OSMO" target="_blank">
         <button>Get Jackal</button>
       </a>
@@ -45,10 +46,14 @@
   const editorData = ref('')
   const address = ref(bStore.getJackalAddress())
 
+
+
   const walletInit = ref(bStore.isWalletInit())
   const setEditorText = function(s: string) {
     editorData.value = s
   }
+
+
 
   async function connectWallet () {
     if (bStore.isWalletInit()) {
@@ -60,6 +65,7 @@
     await bStore.initWallet('keplr').catch(alert)
     walletInit.value = bStore.isWalletInit()
     address.value = bStore.getJackalAddress()
+    await bStore.updateJackalBalance()
   }
 
 </script>
@@ -162,6 +168,13 @@
     top: 40%;
     left: 50%;
     transform: translate(-50%, -50%);
+  }
+
+  .balance {
+    border: lightblue solid 3px;
+    display: inline-flex;
+    align-items: center;
+    padding: 0px 10px;
   }
 
 </style>
