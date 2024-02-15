@@ -81,7 +81,7 @@
 
 <style lang="scss">
   #user-main {
-    padding: 0rem 4rem;
+    padding: 40px 4rem 0rem;
     height: 100%;
     display: flex;
     flex-direction: column;
