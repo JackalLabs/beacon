@@ -140,6 +140,7 @@
     padding: 0px 60px;
     height: 100%;
     background-color: #fff;
+    overflow-y: scroll;
   }
 
   @media screen and (min-width: 800px) {
@@ -148,15 +149,11 @@
     }
   }
 
-  @media screen and (min-width: 1100px) {
-    #article-section {
-      width: 50%;
-    }
-  }
 
   #article {
     text-align: left;
     padding-top: 40px;
+    padding-bottom: 20px;
 
     img {
       width: 100% !important;

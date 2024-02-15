@@ -15,10 +15,10 @@ export const navItems: INavOption[] = [
     desc: '',
     path: '/editor'
   },
-  {
-    label: 'Settings',
-    desc: '',
-    path: '/settings'
-  },
+  // {
+  //   label: 'Settings',
+  //   desc: '',
+  //   path: '/settings'
+  // },
 
 ]

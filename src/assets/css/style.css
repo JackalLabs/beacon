@@ -74,6 +74,7 @@ button:focus-visible {
 .template-container {
   flex-grow: 1;
   background-color: #fafafa;
+  overflow-y: scroll;
 }
 
 h1 {

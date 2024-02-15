@@ -6,7 +6,7 @@
 [[headers]]
     for = "/*"
     [headers.values]
-        Content-Security-Policy = "default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'wasm-unsafe-eval' 'unsafe-inline' chrome-extension: https://netlify-rum.netlify.app; connect-src 'self' https:; object-src 'self' https:; media-src 'self' https:; frame-src 'self' https:;"
+        Content-Security-Policy = "default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'wasm-unsafe-eval' 'unsafe-inline' chrome-extension: https://netlify-rum.netlify.app; connect-src 'self' https:; object-src 'self' https:; media-src 'self' https:; frame-src 'self' https:; img-src 'self' https: data:;"
         X-Content-Type-Options = "nosniff"
         Referrer-Policy = "same-origin"
         Permissions-Policy = ""

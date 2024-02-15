@@ -28,9 +28,6 @@
             <span id="wallet-alert">Connect wallet to edit</span>
           </div>
         </section>
-        <aside>
-          <div class="folder-placeholder"></div>
-        </aside>
       </main>
     </div>
   </div>
@@ -80,6 +77,7 @@
   .main-container {
     height: 100%;
     min-width: 70vw;
+    max-width: 70vw;
     margin: 0px auto;
     flex-grow: 1;
     flex-basis: auto;

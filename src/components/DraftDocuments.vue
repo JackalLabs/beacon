@@ -128,7 +128,7 @@
   }
 
   .file-card {
-    border-radius: 4px 4px 0px 4px;
+    //border-radius: 4px 4px 0px 4px;
     align-items: flex-start;
     flex-direction: column;
     display: flex;
@@ -202,6 +202,7 @@
     width: 40vw;
     max-width: 432px;
     height: 20vh;
+    min-height: 200px;
     position: absolute;
     top: 50vh;
     left: 50vw;
