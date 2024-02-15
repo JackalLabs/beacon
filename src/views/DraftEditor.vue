@@ -112,6 +112,8 @@
   #editor {
     border-style: solid;
     border-color: gray;
+    background-color: white;
+    padding-left: 24px;
   }
 
   .connect-buttons {

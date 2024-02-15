@@ -131,14 +131,30 @@
     background-color: lightblue;
   }
 
+
+
+
+
   #article-section {
-    width: 50%;
+    width: 90%;
     margin: 0px auto;
     border-left: gray solid 1px;
     border-right: gray solid 1px;
     padding: 0px 60px;
     height: 100%;
     background-color: #fff;
+  }
+
+  @media screen and (min-width: 800px) {
+    #article-section {
+      width: 70%;
+    }
+  }
+
+  @media screen and (min-width: 1100px) {
+    #article-section {
+      width: 50%;
+    }
   }
 
   #article {
