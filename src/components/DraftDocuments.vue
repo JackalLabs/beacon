@@ -202,6 +202,7 @@
     width: 40vw;
     max-width: 432px;
     height: 20vh;
+    min-height: 200px;
     position: absolute;
     top: 50vh;
     left: 50vw;
