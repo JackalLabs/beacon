@@ -240,11 +240,12 @@ class BStore implements IBStore {
       const sanity: string[] = []
       if (!(await this.globalFileIo.detectFolder(['s', workspace, 'drafts'].join('/')))) sanity.push('drafts')
       if (!(await this.globalFileIo.detectFolder(['s', workspace, 'published'].join('/')))) sanity.push('published')
+
+      await this.fetchWorkspaceFolder()
       if (sanity.length) {
         await this.globalFileIo.createFolders(this.workspaceFolder, sanity)
       }
 
-      await this.fetchWorkspaceFolder()
       await this.fetchDraftsFolder()
       await this.fetchPublishedFolder()
     } else {
