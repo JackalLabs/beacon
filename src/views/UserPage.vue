@@ -15,7 +15,7 @@
                 <router-link :to="`/` + address + `/` + item.name">
                   <div class="work-body">
                     <span>{{ item.date }}</span>
-                    <h2>{{ item.name }}</h2>
+                    <h2>{{ rename(item.name) }}</h2>
                   </div>
                 </router-link>
               </li>
@@ -40,6 +40,19 @@
   const empty = ref(false)
 
   const address = route.params.user
+
+  function rename(val:string ) {
+    return toTitleCase(val.replace(new RegExp('_', 'g'), ' '))
+  }
+
+  function toTitleCase(str: string) {
+    return str.replace(
+      /\w\S*/g,
+      function(txt) {
+        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+      }
+    );
+  }
 
   function convertToTitleCase (str: string) {
     if (!str) {

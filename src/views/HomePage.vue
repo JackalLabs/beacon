@@ -41,7 +41,11 @@
   const test = ref('')
 
   function requestData (owner: string, fileName: string): Promise<string> {
-    const url = `https://jackal.link/p/${owner}/beacon/published/${fileName}.html`
+    let f = fileName;
+    if (fileName == "introducing_beacon") {
+      f = "Introducing_Beacon"
+    }
+    const url = `https://jackal.link/p/${owner}/beacon/published/${f}.html`
     return fetch(url)
       .then(resp => resp.text())
       .catch(err => {

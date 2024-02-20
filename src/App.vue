@@ -1,6 +1,6 @@
 <template>
   <NavBar />
-  <span id="jackal-logo"><img id="beacon-logo-footer" width="14" height="14" src="/public/icon.svg" />Made by Jackal Labs</span>
+  <span id="jackal-logo"><img id="beacon-logo-footer" width="14" height="14" src="/icon.svg" />Made by Jackal Labs</span>
   <router-view />
 </template>
 
