@@ -237,6 +237,13 @@ class BStore implements IBStore {
       throw 'oh fuck file io'
     }
     if (await this.globalFileIo.detectFolder(['s', workspace].join('/'))) {
+      const sanity: string[] = []
+      if (!(await this.globalFileIo.detectFolder(['s', workspace, 'drafts'].join('/')))) sanity.push('drafts')
+      if (!(await this.globalFileIo.detectFolder(['s', workspace, 'published'].join('/')))) sanity.push('published')
+      if (sanity.length) {
+        await this.globalFileIo.createFolders(this.workspaceFolder, sanity)
+      }
+
       await this.fetchWorkspaceFolder()
       await this.fetchDraftsFolder()
       await this.fetchPublishedFolder()
