@@ -88,7 +88,7 @@
 
 <style lang="scss">
   #home-main {
-    padding: 0rem 4rem;
+    padding: 0rem 0rem;
     height: 100%;
   }
 
@@ -135,19 +135,30 @@
 
 
   #article-section {
-    width: 90%;
+    width: 100%;
     margin: 0px auto;
     border-left: gray solid 1px;
     border-right: gray solid 1px;
-    padding: 0px 60px;
+    padding: 0px 20px;
     height: 100%;
     background-color: #fff;
     overflow-y: scroll;
+
+    max-width: 100%;
+    box-sizing: border-box;
   }
+
+
 
   @media screen and (min-width: 800px) {
     #article-section {
       width: 70%;
+      padding: 0px 60px;
+
+    }
+
+    #home-main {
+      padding: 0rem 4rem;
     }
   }
 
@@ -156,6 +167,8 @@
     text-align: left;
     padding-top: 40px;
     padding-bottom: 20px;
+    overflow-x: hidden;
+    max-width: 100%;
 
     img {
       width: 100% !important;
@@ -164,6 +177,12 @@
 
     h1 {
       margin-top: 0px;
+    }
+
+    .table {
+      display: block;
+      overflow-x: scroll;
+      max-width: 100%;
     }
   }
 
