@@ -155,7 +155,7 @@ class BStore implements IBStore {
       key: name,
       uploadable: await handler.getForUpload()
     }
-    await this.globalFileIo.staggeredUploadFiles(upload, this.draftsFolder, { complete: 0, timer: 0 })
+    await this.globalFileIo.staggeredUploadFiles(upload, this.draftsFolder, { complete: 0, timer: 0 }, true)
     await this.fetchDraftsFolder()
   }
 
@@ -176,7 +176,7 @@ class BStore implements IBStore {
       key: safeName,
       uploadable: await handler.getForPublicUpload()
     }
-    await this.globalFileIo.staggeredUploadFiles(upload, this.publishedFolder, { complete: 0, timer: 0 })
+    await this.globalFileIo.staggeredUploadFiles(upload, this.publishedFolder, { complete: 0, timer: 0 }, true)
     await this.fetchPublishedFolder()
 
     await this.compilePublications()
