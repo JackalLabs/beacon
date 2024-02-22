@@ -8,7 +8,7 @@
       </li>
     </ul>
     <div class="version">
-      <span>alpha: v0.2.42</span>
+      <span>alpha: v0.2.43</span>
     </div>
   </nav>
 </template>
